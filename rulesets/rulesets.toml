@@ -1,0 +1,19 @@
+[[rulesets]]
+years = [2023, 2024]
+directory = "2023-centerstage"
+shortname = "CENTERSTAGE"
+longname = "CENTERSTAGE℠ presented by RTX"
+
+[rulesets.source-material]
+# The TOML spec may natively understand RFC 3339 dates, but evidently
+# something about the TOML crate does not: removing the strings here results in a
+# deserialization error complaining about an invalid type "map".
+accessed = "2023-10-26T00:00:00-07:00"
+gm1-traditional = "https://firstinspiresst01.blob.core.windows.net/first-in-show-ftc/game-manual-part-1-traditional.pdf"
+gm2-traditional = "https://firstinspiresst01.blob.core.windows.net/first-in-show-ftc/game-manual-part-2-traditional.pdf"
+
+# [[rulesets]]
+# years = [2022, 2023]
+# directory = "2022-powerplay"
+# shortname = "POWERPLAY"
+# longname = "POWERPLAY℠ presented by Raytheon Technologies"

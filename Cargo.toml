@@ -1,0 +1,17 @@
+[package]
+name = "what_the_ref"
+version = "0.1.0"
+edition = "2021"
+license = "0BSD"
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+env_logger = "0.10"
+horrorshow = "0.8"
+log = "0.4"
+markdown = "1.0.0-alpha.14"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.8"
+
+[profile.release]
+lto = true
