@@ -6,8 +6,8 @@ pub enum RulesetLoadError {
     DeserializationError(toml::de::Error),
     NoSuchRulesetDirectory(String, PathBuf),
     MissingGlossary,
-    /// (file basename, mdast error)
-    MarkdownErrorInGlossaryTerm(String, String),
+    /// Contains basename of file
+    MissingHeaderForTerm(String),
 }
 
 impl From<std::io::Error> for RulesetLoadError {

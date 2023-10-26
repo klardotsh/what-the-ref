@@ -96,10 +96,6 @@ impl InlineRule for InterlinkScanner {
             let len = *end_idx + 1;
             let interlink_src = input[0..len].to_string();
             let display_text = parse_display_text(&interlink_src);
-            debug!(
-                "interlink detected. raw len: {}, display_text: {}",
-                len, display_text
-            );
             (Node::new(Interlink { display_text }), len)
         })
     }

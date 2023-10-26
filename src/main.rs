@@ -2,10 +2,12 @@ use log::info;
 
 mod consts;
 mod glossary;
+mod interlink_md;
 mod ruleset;
 mod ruleset_load_error;
 mod ruleset_meta;
 mod term;
+mod text_normalization;
 
 use consts::DIRECTORY_RULESETS;
 use ruleset::Ruleset;
@@ -34,6 +36,5 @@ fn main() {
 
     for meta in metas.into_iter() {
         let ruleset = Ruleset::load_using_meta(meta, &rulesets_directory);
-        println!("{:?}", ruleset);
     }
 }
