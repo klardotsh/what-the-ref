@@ -1,6 +1,7 @@
 ---
-alias_stems:
-  - "autonomous"
+alias_stems = [
+  "autonomous"
+]
 ---
 
 # Autonomous Period

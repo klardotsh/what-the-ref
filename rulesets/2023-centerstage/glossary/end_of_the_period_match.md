@@ -1,9 +1,10 @@
 ---
-alias_stems:
-  - "end of the period"
-  - "end of period"
-  - "end of the match"
-  - "end of match"
+alias_stems = [
+  "end of the period",
+  "end of period",
+  "end of the match",
+  "end of match",
+]
 ---
 
 # End of the Period/Match

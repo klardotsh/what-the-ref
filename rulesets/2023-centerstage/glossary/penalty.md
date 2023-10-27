@@ -1,7 +1,8 @@
 ---
-alias_stems:
-  - "yellow card"
-  - "red card"
+alias_stems = [
+  "yellow card",
+  "red card",
+]
 ---
 
 # Penalty

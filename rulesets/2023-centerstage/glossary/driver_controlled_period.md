@@ -1,6 +1,7 @@
 ---
-alias_stems:
-  - "driver-controlled"
+alias_stems = [
+  "driver-controlled"
+]
 ---
 
 # Driver-Controlled Period

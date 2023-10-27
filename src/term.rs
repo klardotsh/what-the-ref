@@ -3,6 +3,7 @@ use std::path::{Path, PathBuf};
 use log::{debug, warn};
 use markdown_it::plugins::cmark::block::heading::ATXHeading;
 use markdown_it::Node;
+use markdown_it_front_matter::FrontMatter as FrontMatterNode;
 use serde::Deserialize;
 
 use crate::ruleset_load_error::RulesetLoadError;
@@ -10,13 +11,15 @@ use crate::text_normalization::anchorize;
 
 #[derive(Debug, Deserialize)]
 pub struct Term {
-    anchor: String,
+    anchors: Vec<String>,
+    name: String,
     rendered_html: String,
 }
 
 impl Term {
     pub fn load_from_markdown_file(path: &Path) -> Result<Self, RulesetLoadError> {
         let term_file_path = path.file_name().expect("DirFile exists with no name?");
+        let term_path_string = term_file_path.to_string_lossy();
         let term_file_basename = PathBuf::from(term_file_path)
             .with_extension("")
             .to_string_lossy()
@@ -31,7 +34,7 @@ impl Term {
         let markdown_ast = markdown_parser.parse(&std::fs::read_to_string(path)?);
 
         let header = extract_header_from_markdown(&markdown_ast).ok_or_else(|| {
-            RulesetLoadError::MissingHeaderForTerm(term_file_path.to_string_lossy().into())
+            RulesetLoadError::MissingHeaderForTerm(term_path_string.clone().into())
         })?;
 
         let anchor = anchorize(&header);
@@ -42,9 +45,28 @@ impl Term {
             warn!("glossary term \"{}\" filename \"{}\" does not match calculated anchor \"{}\", consider renaming file on disk", &header, &term_file_basename, &anchor);
         }
 
+        let anchors = match FrontMatter::from_markdown_ast(&markdown_ast).map_err(|e| {
+            RulesetLoadError::MalformedTermFrontMatter(term_path_string.clone().into(), e)
+        })? {
+            Some(mut fm) => {
+                let mut idx = 0;
+                while idx < fm.alias_stems.len() {
+                    fm.alias_stems[idx] = anchorize(&fm.alias_stems[idx]);
+                    idx += 1;
+                }
+                debug!(
+                    "... and is additionally anchored as each of: {}",
+                    fm.alias_stems.join(", ")
+                );
+                fm.alias_stems.push(anchor);
+                fm.alias_stems
+            }
+            None => vec![anchor],
+        };
+
         Ok(Self {
-            // TODO: wrong enum member, was placeholder
-            anchor,
+            anchors,
+            name: header,
             rendered_html: markdown_ast.render(),
         })
     }
@@ -55,4 +77,21 @@ fn extract_header_from_markdown(ast: &Node) -> Option<String> {
         .iter()
         .find(|c| c.is::<ATXHeading>())
         .map(|node| node.collect_text())
+}
+
+#[derive(Debug, Deserialize)]
+struct FrontMatter {
+    alias_stems: Vec<String>,
+}
+
+impl FrontMatter {
+    fn from_markdown_ast(ast: &Node) -> Result<Option<Self>, toml::de::Error> {
+        ast.children
+            .iter()
+            .find(|c| c.is::<FrontMatterNode>())
+            .map(|node| node.cast::<FrontMatterNode>().map(|fm| fm.content.clone()))
+            .flatten()
+            .map(|fm| toml::from_str(&fm))
+            .transpose()
+    }
 }

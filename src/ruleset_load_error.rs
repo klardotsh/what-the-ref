@@ -8,6 +8,8 @@ pub enum RulesetLoadError {
     MissingGlossary,
     /// Contains basename of file
     MissingHeaderForTerm(String),
+    /// Contains basename of file
+    MalformedTermFrontMatter(String, toml::de::Error),
 }
 
 impl From<std::io::Error> for RulesetLoadError {

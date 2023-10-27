@@ -1,4 +1,4 @@
-use log::info;
+use log::{error, info};
 
 mod consts;
 mod glossary;
@@ -35,6 +35,13 @@ fn main() {
     let metas = load_ruleset_metas_from_disk(&rulesets_directory).unwrap();
 
     for meta in metas.into_iter() {
-        let ruleset = Ruleset::load_using_meta(meta, &rulesets_directory);
+        let shortname = meta.shortname.clone();
+        match Ruleset::load_using_meta(meta, &rulesets_directory) {
+            Ok(_) => {}
+            Err(e) => {
+                error!("failed to read ruleset for {}: {:?}", shortname, e);
+                std::process::exit(1);
+            }
+        }
     }
 }
