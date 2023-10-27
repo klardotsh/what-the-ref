@@ -4,6 +4,18 @@ directory = "2023-centerstage"
 shortname = "CENTERSTAGE"
 longname = "CENTERSTAGE℠ presented by RTX"
 
+[[rulesets.rules]]
+section-gm2 = "4.5"
+
+[[rulesets.rules.safety]]
+section-gm2 = "4.5.1"
+
+[[rulesets.rules.general]]
+section-gm2 = "4.5.2"
+
+[[rulesets.rules.game-specific]]
+section-gm2 = "4.5.3"
+
 [rulesets.source-material]
 # The TOML spec may natively understand RFC 3339 dates, but evidently
 # something about the TOML crate does not: removing the strings here results in a
