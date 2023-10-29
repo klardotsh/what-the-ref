@@ -3,6 +3,7 @@ use log::{error, info};
 mod consts;
 mod glossary;
 mod interlink_md;
+mod markdown;
 mod ruleset;
 mod ruleset_load_error;
 mod ruleset_meta;

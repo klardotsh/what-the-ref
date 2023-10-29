@@ -1,9 +1,6 @@
 use std::path::{Path, PathBuf};
 
 use log::{debug, warn};
-use markdown_it::plugins::cmark::block::heading::ATXHeading;
-use markdown_it::Node;
-use markdown_it_front_matter::FrontMatter as FrontMatterNode;
 use serde::Deserialize;
 
 use crate::ruleset_load_error::RulesetLoadError;
@@ -26,14 +23,9 @@ impl Term {
             .into_owned();
         debug!("found term file {}", term_file_path.to_string_lossy());
 
-        let mut markdown_parser = markdown_it::MarkdownIt::new();
-        markdown_it::plugins::cmark::add(&mut markdown_parser);
-        markdown_it_front_matter::add(&mut markdown_parser);
-        crate::interlink_md::add(&mut markdown_parser);
+        let markdown_ast = crate::markdown::AST::read_from_file(path)?;
 
-        let markdown_ast = markdown_parser.parse(&std::fs::read_to_string(path)?);
-
-        let header = extract_header_from_markdown(&markdown_ast).ok_or_else(|| {
+        let header = markdown_ast.extract_header().ok_or_else(|| {
             RulesetLoadError::MissingHeaderForTerm(term_path_string.clone().into())
         })?;
 
@@ -45,24 +37,24 @@ impl Term {
             warn!("glossary term \"{}\" filename \"{}\" does not match calculated anchor \"{}\", consider renaming file on disk", &header, &term_file_basename, &anchor);
         }
 
-        let anchors = match FrontMatter::from_markdown_ast(&markdown_ast).map_err(|e| {
-            RulesetLoadError::MalformedTermFrontMatter(term_path_string.clone().into(), e)
-        })? {
-            Some(mut fm) => {
-                let mut idx = 0;
-                while idx < fm.alias_stems.len() {
-                    fm.alias_stems[idx] = anchorize(&fm.alias_stems[idx]);
-                    idx += 1;
-                }
-                debug!(
-                    "... and is additionally anchored as each of: {}",
-                    fm.alias_stems.join(", ")
-                );
-                fm.alias_stems.push(anchor);
-                fm.alias_stems
+        let mut anchors = vec![anchor];
+
+        if let Some(mut fm) = markdown_ast
+            .extract_frontmatter_text()
+            .map(|fm| FrontMatter::try_from_with_context(&fm, &term_path_string.clone()))
+            .transpose()?
+        {
+            let mut idx = 0;
+            while idx < fm.alias_stems.len() {
+                fm.alias_stems[idx] = anchorize(&fm.alias_stems[idx]);
+                idx += 1;
             }
-            None => vec![anchor],
-        };
+            debug!(
+                "... and is additionally anchored as each of: {}",
+                fm.alias_stems.join(", ")
+            );
+            anchors.extend(fm.alias_stems)
+        }
 
         Ok(Self {
             anchors,
@@ -72,26 +64,14 @@ impl Term {
     }
 }
 
-fn extract_header_from_markdown(ast: &Node) -> Option<String> {
-    ast.children
-        .iter()
-        .find(|c| c.is::<ATXHeading>())
-        .map(|node| node.collect_text())
-}
-
 #[derive(Debug, Deserialize)]
 struct FrontMatter {
     alias_stems: Vec<String>,
 }
 
 impl FrontMatter {
-    fn from_markdown_ast(ast: &Node) -> Result<Option<Self>, toml::de::Error> {
-        ast.children
-            .iter()
-            .find(|c| c.is::<FrontMatterNode>())
-            .map(|node| node.cast::<FrontMatterNode>().map(|fm| fm.content.clone()))
-            .flatten()
-            .map(|fm| toml::from_str(&fm))
-            .transpose()
+    fn try_from_with_context(src: &str, term_path: &str) -> Result<Self, RulesetLoadError> {
+        toml::from_str(src)
+            .map_err(|e| RulesetLoadError::MalformedTermFrontMatter((term_path.to_string()), e))
     }
 }
