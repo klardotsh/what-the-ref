@@ -7,5 +7,5 @@ alias_stems = [
 # Game Element
 
 Any item |Robots| interact with to play the game. Game Elements for this year’s
-game include |Pixels|, |Backdrops|, |Trusses|, |Stage Door|, |Riggings|, |Team
-Prop|, and |Drone|.
+game include |Pixels|, |Backdrops|, |Trusses|, |Stage Door|, |Riggings|,
+|Team Prop|, and |Drone|.
