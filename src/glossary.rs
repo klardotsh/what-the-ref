@@ -8,7 +8,7 @@ use crate::term::Term;
 
 const ASSUMED_MINIMUM_TERMS: usize = 50;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Hash)]
 pub struct Glossary {
     pub terms: Vec<Term>,
 }

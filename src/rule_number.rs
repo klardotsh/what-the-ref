@@ -3,7 +3,7 @@ use std::str::FromStr;
 
 use serde::Deserialize;
 
-#[derive(Eq, Debug, Deserialize, PartialEq)]
+#[derive(Clone, Eq, Debug, Deserialize, Hash, PartialEq)]
 pub enum RuleNumber {
     Safety(NonZeroU8),
     General(NonZeroU8),
@@ -14,6 +14,8 @@ impl FromStr for RuleNumber {
     type Err = RuleNumberParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let s = s.to_lowercase();
+
         if s.starts_with("gs") {
             return s.get(2..).map_or_else(
                 || Err(Self::Err::MissingNumber),

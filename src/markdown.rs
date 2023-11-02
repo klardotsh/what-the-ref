@@ -47,7 +47,11 @@ impl Parser {
         Self(parser)
     }
 
+    pub fn parse(self: &Self, src: &str) -> Node {
+        self.0.parse(src)
+    }
+
     pub fn read_ast_from_file(self: &Self, path: &Path) -> Result<Node, std::io::Error> {
-        read_to_string(path).map(|data| self.0.parse(&data))
+        read_to_string(path).map(|data| self.parse(&data))
     }
 }

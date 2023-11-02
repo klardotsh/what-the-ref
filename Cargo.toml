@@ -8,6 +8,7 @@ license = "0BSD"
 chrono = { version = "0.4", features = ["serde"] }
 env_logger = "0.10"
 horrorshow = "0.8"
+indexmap = { version = "2.1", features = ["serde"] }
 log = "0.4"
 markdown-it = "0.6"
 markdown-it-front-matter = "0.3"

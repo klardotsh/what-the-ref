@@ -4,17 +4,49 @@ directory = "2023-centerstage"
 shortname = "CENTERSTAGE"
 longname = "CENTERSTAGE℠ presented by RTX"
 
-[[rulesets.rules]]
-section-gm2 = "4.5"
+# Sources are insertion order-sensitive, and use LIFO ordering. That is,
+# since the FTC interpretation precedence is: HR Forums > Q&A > GM2 Safety >
+# GM2 Game-Specific > GM2 General > GM1, we must define our source blocks in the
+# inverse of that order here.
+#
+# Why do it this way instead of making Q&A and HR Forum first-class citizens and
+# hard-coding this heirarchy in? Because I stubbornly hope that some day FIRST
+# will simplify this system to just one "Game Manual" that includes everything,
+# and the most I have to do is maybe split Game Rules and Safety Rules apart. A
+# boy can dream, right?
 
-[[rulesets.rules.safety]]
-section-gm2 = "4.5.1"
+[[rulesets.sources]]
+directory = "general"
 
-[[rulesets.rules.general]]
-section-gm2 = "4.5.2"
+[rulesets.sources.resource]
+href = "https://firstinspiresst01.blob.core.windows.net/first-in-show-ftc/game-manual-part-2-traditional.pdf"
+name = "Game Manual Pt. 2"
+anchor = "manual-gm2"
+accessed = "2023-10-26T00:00:00-07:00"
+section = "4.5.2"
+section-name = "General Rules"
 
-[[rulesets.rules.game-specific]]
-section-gm2 = "4.5.3"
+[[rulesets.sources]]
+directory = "game-specific"
+
+[rulesets.sources.resource]
+href = "https://firstinspiresst01.blob.core.windows.net/first-in-show-ftc/game-manual-part-2-traditional.pdf"
+name = "Game Manual Pt. 2"
+anchor = "manual-gm2"
+accessed = "2023-10-26T00:00:00-07:00"
+section = "4.5.3"
+section-name = "Game-Specific Rules"
+
+[[rulesets.sources]]
+directory = "game-specific"
+
+[rulesets.sources.resource]
+href = "https://firstinspiresst01.blob.core.windows.net/first-in-show-ftc/game-manual-part-2-traditional.pdf"
+name = "Game Manual Pt. 2"
+anchor = "manual-gm2"
+accessed = "2023-10-26T00:00:00-07:00"
+section = "4.5.1"
+section-name = "Safety Rules"
 
 [rulesets.source-material]
 # The TOML spec may natively understand RFC 3339 dates, but evidently

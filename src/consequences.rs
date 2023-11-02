@@ -3,6 +3,7 @@ use std::{num::NonZeroU8, str::FromStr};
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize, Eq, PartialEq)]
+#[serde(try_from = "String")]
 pub enum Consequence {
     Penalty(Penalty),
     Warning,
@@ -56,10 +57,31 @@ impl FromStr for Consequence {
     }
 }
 
+impl TryFrom<String> for Consequence {
+    type Error = ConsequenceParseError;
+
+    fn try_from(it: String) -> Result<Self, Self::Error> {
+        Self::from_str(&it)
+    }
+}
+
 #[derive(Debug, Eq, PartialEq)]
 pub enum ConsequenceParseError {
     Unrecognizable,
     TrailingGarbage(String),
+}
+
+impl std::fmt::Display for ConsequenceParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(
+            f,
+            "{}",
+            match self {
+                Self::Unrecognizable => "Unrecognizable".into(),
+                Self::TrailingGarbage(gar) => format!("Trailing garbage: {}", gar),
+            }
+        )
+    }
 }
 
 #[derive(Debug, Deserialize, Eq, PartialEq)]
@@ -87,7 +109,7 @@ impl FromStr for Penalty {
             .ok_or(())
             .map(|c| NonZeroU8::from_str(c).map_err(|_| ()))??;
         let kind = s
-            .get(1..3)
+            .get(1..4)
             .map(PenaltyKind::from_str_opt)
             .flatten()
             .ok_or(())?;
@@ -99,7 +121,7 @@ impl FromStr for Penalty {
             at_hr_discretion: false,
         };
 
-        let mut trailing_idx = 3;
+        let mut trailing_idx = 4;
 
         while let Some(c) = s.get(trailing_idx..trailing_idx + 1) {
             match c {
@@ -129,8 +151,8 @@ impl PenaltyKind {
     // the codebase.
     fn from_str_opt(s: &str) -> Option<Self> {
         match s {
-            "Ma" => Some(Self::Major),
-            "Mi" => Some(Self::Minor),
+            "xMa" => Some(Self::Major),
+            "xMi" => Some(Self::Minor),
             _ => None,
         }
     }
@@ -190,7 +212,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: false,
             at_hr_discretion: false,
         })),
-        "1Mi".parse::<Consequence>()
+        "1xMi".parse::<Consequence>()
     );
     assert_eq!(
         Ok(Consequence::Penalty(Penalty {
@@ -199,7 +221,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: false,
             at_hr_discretion: false,
         })),
-        "1Ma".parse::<Consequence>()
+        "1xMa".parse::<Consequence>()
     );
     assert_eq!(
         Ok(Consequence::Penalty(Penalty {
@@ -208,7 +230,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: false,
             at_hr_discretion: true,
         })),
-        "1Ma*".parse::<Consequence>()
+        "1xMa*".parse::<Consequence>()
     );
     assert_eq!(
         Ok(Consequence::Penalty(Penalty {
@@ -217,7 +239,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: true,
             at_hr_discretion: false,
         })),
-        "1Mi+".parse::<Consequence>()
+        "1xMi+".parse::<Consequence>()
     );
     // This would be just about the most ruthless rule in FTC history...
     assert_eq!(
@@ -227,7 +249,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: true,
             at_hr_discretion: true,
         })),
-        "3Ma+*".parse::<Consequence>()
+        "3xMa+*".parse::<Consequence>()
     );
     assert_eq!(
         Err(ConsequenceParseError::Unrecognizable),

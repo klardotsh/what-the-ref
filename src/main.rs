@@ -5,10 +5,13 @@ mod consts;
 mod glossary;
 mod interlink_md;
 mod markdown;
+mod rule;
+mod rule_briefing;
 mod rule_number;
 mod ruleset;
 mod ruleset_load_error;
 mod ruleset_meta;
+mod summary;
 mod term;
 mod text_normalization;
 

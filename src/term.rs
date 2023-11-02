@@ -6,7 +6,7 @@ use serde::Deserialize;
 use crate::ruleset_load_error::RulesetLoadError;
 use crate::text_normalization::anchorize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Hash)]
 pub struct Term {
     anchors: Vec<String>,
     name: String,

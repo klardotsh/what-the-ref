@@ -17,8 +17,30 @@ pub struct RulesetMeta {
     pub shortname: String,
     pub longname: String,
 
+    pub sources: Vec<Source>,
+
     #[serde(rename = "source-material")]
     pub source_material: SourceMaterial,
+}
+
+#[derive(Debug, Deserialize, Eq, PartialEq)]
+pub struct Source {
+    pub directory: String,
+    pub resource: Resource,
+}
+
+#[derive(Debug, Deserialize, Eq, PartialEq)]
+pub struct Resource {
+    // Could use http::Uri here, but that pulls a dep for type parsing purposes
+    // only, feels like overengineering for now.
+    pub href: String,
+    pub name: String,
+    pub anchor: String,
+    pub accessed: chrono::DateTime<chrono::Utc>,
+    // // TODO: narrow type, manual sections can be parsed semantically
+    pub section: String,
+    #[serde(rename = "section-name")]
+    pub section_name: String,
 }
 
 #[derive(Debug, Deserialize)]
