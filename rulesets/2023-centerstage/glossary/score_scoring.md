@@ -1,3 +1,7 @@
+---
+alias_stems = ["score"]
+---
+
 # Score / Scoring
 
 |Robots| earn points for their |Alliance| by interacting with |Scoring Elements|

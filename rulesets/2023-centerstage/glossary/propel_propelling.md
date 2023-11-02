@@ -1,3 +1,7 @@
+---
+alias_stems = ["propel"]
+---
+
 # Propel / Propelling
 
 Giving |Game Elements| enough force such that they move independent of contact

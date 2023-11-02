@@ -1,3 +1,12 @@
+---
+alias_stems = [
+  "in",
+  "inside",
+  "completely in",
+  "completely inside",
+]
+---
+
 # In (Inside) / Completely In (Completely Inside)
 
 An object that has crossed into the upwards vertical extension (i.e., at a right
