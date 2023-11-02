@@ -10,6 +10,16 @@ pub enum RuleNumber {
     GameSpecific(NonZeroU8),
 }
 
+impl std::fmt::Display for RuleNumber {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Safety(num) => write!(f, "S{:0>2}", num),
+            Self::General(num) => write!(f, "G{:0>2}", num),
+            Self::GameSpecific(num) => write!(f, "GS{:0>2}", num),
+        }
+    }
+}
+
 impl FromStr for RuleNumber {
     type Err = RuleNumberParseError;
 

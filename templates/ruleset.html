@@ -322,6 +322,27 @@ details.heading summary h3 {
 	margin-top: 0;
 }
   </style>
+
+	<script type="text/javascript">
+	// Thanks, https://stackoverflow.com/a/73871944
+	function openTarget() {
+    const hash = location.hash.substring(1);
+    if (hash) {
+			console.log(hash);
+      const target = document.getElementById(hash);
+      if (target) {
+        const details = target.closest('details');
+				console.log(target, details);
+        if (details) {
+          details.open = true;
+					details.scrollIntoView();
+				}
+      }
+    }
+	}
+	window.addEventListener('hashchange', openTarget);
+	openTarget();
+	</script>
 </head>
 
 <body>
@@ -349,16 +370,22 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
     <h1>Glossary</h1>
 
     {% for term in glossary.terms %}
+		<details>
+		<summary>{{ term.name }}</summary>
     {% for anchor in term.anchors %}
     <a id="{{ anchor }}" style="visibility: hidden"></a>
     {% endfor %}
     {{ term.rendered_html|safe }}
+		</details>
     {% endfor %}
 
     <h1>Rules</h1>
 
     {% for (_, rule) in rules %}
+		<details>
+		<summary>{{ rule.number }}: {{ rule.title }}</summary>
     {{ rule.full_html|safe }}
+		</details>
     {% endfor %}
   </div>
 </body>
