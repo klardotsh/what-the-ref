@@ -1,5 +1,6 @@
 use std::path::{Path, PathBuf};
 
+use askama::Template;
 use indexmap::IndexMap;
 use log::{debug, info};
 use serde::Deserialize;
@@ -13,8 +14,11 @@ use crate::ruleset_meta::RulesetMeta;
 
 const ASSUMED_NUMBER_OF_RULES: usize = 50;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Template)]
+#[template(path = "ruleset.html")]
 pub struct Ruleset {
+    #[serde(skip_deserializing, default = "Default::default")]
+    pub generated: chrono::DateTime<chrono::Utc>,
     pub glossary: Glossary,
     pub meta: RulesetMeta,
     #[serde(skip_deserializing)]
@@ -76,12 +80,13 @@ impl Ruleset {
             assert!(path.pop());
         }
 
-        debug!("discovered rules: {:?}", rules);
+        rules.sort_keys();
 
         Ok(Self {
             glossary,
             meta,
             rules,
+            generated: chrono::Utc::now(),
         })
     }
 }

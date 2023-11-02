@@ -3,7 +3,7 @@ use std::str::FromStr;
 
 use serde::Deserialize;
 
-#[derive(Clone, Eq, Debug, Deserialize, Hash, PartialEq)]
+#[derive(Clone, Eq, Debug, Deserialize, Hash, Ord, PartialEq, PartialOrd)]
 pub enum RuleNumber {
     Safety(NonZeroU8),
     General(NonZeroU8),

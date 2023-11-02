@@ -8,9 +8,9 @@ use crate::text_normalization::anchorize;
 
 #[derive(Debug, Deserialize, Hash)]
 pub struct Term {
-    anchors: Vec<String>,
-    name: String,
-    rendered_html: String,
+    pub anchors: Vec<String>,
+    pub name: String,
+    pub rendered_html: String,
 }
 
 impl Term {

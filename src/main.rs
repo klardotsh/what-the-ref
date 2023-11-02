@@ -1,3 +1,6 @@
+use std::io::Write;
+
+use askama::Template;
 use log::{error, info};
 
 mod consequences;
@@ -43,11 +46,18 @@ fn main() {
     for meta in metas.into_iter() {
         let shortname = meta.shortname.clone();
         match Ruleset::load_using_meta(meta, &rulesets_directory) {
-            Ok(_) => {}
+            Ok(rs) => render_rules(&rs),
             Err(e) => {
                 error!("failed to read ruleset for {}: {:?}", shortname, e);
                 std::process::exit(1);
             }
         }
     }
+}
+
+// TODO: move me somewhere! at this point I'm racing against the clock so code
+// cleanliness is out the window, just gotta ship
+fn render_rules(rs: &Ruleset) {
+    let mut file = std::fs::File::create(&format!("{}.html", rs.meta.years[0])).unwrap();
+    file.write_all(rs.render().unwrap().as_bytes()).unwrap()
 }

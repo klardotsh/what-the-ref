@@ -2,6 +2,8 @@ use log::debug;
 use markdown_it::parser::inline::{InlineRule, InlineState};
 use markdown_it::{MarkdownIt, Node, NodeValue, Renderer};
 
+use crate::text_normalization::anchorize;
+
 const CHAR_NEWLINE: char = '\n';
 const CHAR_PIPE: char = '|';
 
@@ -37,10 +39,11 @@ impl NodeValue for Interlink {
         let mut attrs = node.attrs.clone();
 
         attrs.push(("class", "interlink".into()));
+        attrs.push(("href", format!("#{}", anchorize(&self.display_text))));
 
-        fmt.open("span", &attrs);
+        fmt.open("a", &attrs);
         fmt.text(&self.display_text);
-        fmt.close("span");
+        fmt.close("a");
     }
 }
 

@@ -34,6 +34,9 @@ impl Glossary {
             terms.push(Term::load_from_markdown_file(&file_path)?);
         }
 
+        // TODO: try to remove horrible clone
+        terms.sort_by_key(|k| k.name.clone());
+
         Ok(Self { terms })
     }
 }
