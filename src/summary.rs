@@ -17,6 +17,17 @@ pub enum Summary {
 impl Summary {
     pub fn from_toml_front_matter(fm: &str) -> Self {
         // TODO: no unwrap. gotta ship, man.
-        toml::from_str(fm).unwrap()
+        let mut ret: Self = toml::from_str(fm).unwrap();
+
+        match &mut ret {
+            Self::EntireRule(ref mut rb) => rb.matrix.sort(),
+            Self::PerSubRule(ref mut rbs) => {
+                for rb in rbs.values_mut() {
+                    rb.matrix.sort()
+                }
+            }
+        }
+
+        ret
     }
 }

@@ -1,13 +1,13 @@
-use serde::{de::Error, Deserialize, Deserializer};
+use serde::{Deserialize, Deserializer};
 
 use crate::consequences::Consequence;
 
 #[derive(Debug, Deserialize)]
 pub struct RuleBriefing {
     #[serde(rename = "consequence_brief", deserialize_with = "briefing_markdown")]
-    description: String,
+    pub description: String,
     #[serde(default = "Vec::new")]
-    matrix: Vec<Consequence>,
+    pub matrix: Vec<Consequence>,
 }
 
 fn briefing_markdown<'de, D>(deserializer: D) -> Result<String, D::Error>

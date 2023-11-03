@@ -122,6 +122,22 @@ pub struct Penalty {
     pub at_hr_discretion: bool,
 }
 
+impl std::fmt::Display for Penalty {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "{}x{}{}{}",
+            self.count,
+            match self.kind {
+                PenaltyKind::Minor => "Mi",
+                PenaltyKind::Major => "Ma",
+            },
+            if self.at_hr_discretion { "?" } else { "" },
+            if self.repeat_5s { "/5s" } else { "" },
+        )
+    }
+}
+
 impl FromStr for Penalty {
     // We discard the errors from this function anyway and forcibly downgrade
     // to ConsequenceParseError::Unrecognizable, because I'm lazy and frankly

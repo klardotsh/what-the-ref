@@ -2,6 +2,8 @@
 <html>
 <head>
   <title>{{ meta.longname }} | What The Ref?</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
   <!-- 
   Borrowing the CSS from my personal website at https://klar.sh for the most
@@ -261,6 +263,11 @@ blockquote p {
 	height: 0;
 }
 
+.flexy .push-left-10 {
+	flex-basis: 10%;
+	flex-grow: 0;
+}
+
 .flexy .push-left-20 {
 	flex-basis: 20%;
 	flex-grow: 0;
@@ -269,6 +276,12 @@ blockquote p {
 .flexy .push-left-30 {
 	flex-basis: 30%;
 	flex-grow: 0;
+}
+
+.flexy .push-left-50 {
+	flex-basis: 50%;
+	flex-grow: 1;
+	flex-shrink: 1;
 }
 
 .flexy h3, .flexy h4 {
@@ -299,11 +312,14 @@ blockquote p {
 	display: inline-block;
 }
 
-.flex.description {
+.flex.description, .flex.consequence {
 	align-self: center;
+}
+
+.flex.consequence {
 	margin-left: 1em;
 	margin-right: 0;
-	text-align: justify;
+	//text-align: justify;
 }
 
 details.heading summary {
@@ -320,6 +336,77 @@ details.heading summary h3 {
 
 .resume .testimonial .flex.description {
 	margin-top: 0;
+}
+
+details {
+	border: 1px dashed;
+	padding: 0.75em 0.25em;
+	margin-bottom: 0.75em;
+}
+
+.consequence {
+	text-align: center;
+	flex-shrink: 0;
+	flex-basis: 33%;
+	padding: 0.25em 0.5em;
+	box-sizing: border-box;
+	margin: 0.2em;
+}
+
+.penalties {
+	background-color: lightblue;
+	color: black;
+}
+
+.mild-interventions {
+	background-color: lightgreen;
+	color: black;
+}
+
+.yellow-card {
+	background-color: yellow;
+	color: black;
+}
+
+.red-card {
+	background-color: red;
+	color: black;
+}
+
+.big-interventions {
+	background-color: black;
+	border: 1px dashed red;
+	color: lightgray;
+}
+
+.per-subrule-interventions {
+	background-color: lightgray;
+	color: black;
+}
+
+.centered {
+	text-align: center;
+}
+
+.rule ol {
+	list-style-type: lower-alpha;
+}
+
+.rule ol > li > ol {
+	list-style-type: lower-roman;
+}
+
+.subrule {
+	margin-top: 0.5em;
+}
+
+.subrule p {
+	display: inline;
+	padding: 0;
+}
+
+.subrule-description {
+	flex-grow: 3 !important;
 }
   </style>
 
@@ -342,6 +429,10 @@ details.heading summary h3 {
 	}
 	window.addEventListener('hashchange', openTarget);
 	openTarget();
+
+	function closeAllDetails() {
+		Array.from(document.getElementsByTagName("details")).forEach((ele) => ele.open = false);
+	}
 	</script>
 </head>
 
@@ -364,9 +455,12 @@ to the latest PDFs of the Q&A. If you have questions, concerns, or feedback,
 email me at josh [at] klar [dot] sh, or feel free to <a
 href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
     </p>
+		</blockquote>
   </header>
 
   <div id="content">
+		<button onclick="closeAllDetails()">Close All Sections On Page</button>
+		
     <h1>Glossary</h1>
 
     {% for term in glossary.terms %}
@@ -381,9 +475,78 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 
     <h1>Rules</h1>
 
+    <p class="centered">
+			Consequence hints ending in a ? indicate optional / head ref discretion.
+    </p>
+
     {% for (_, rule) in rules %}
-		<details>
-		<summary>{{ rule.number }}: {{ rule.title }}</summary>
+		<details class="rule">
+		<summary class="flexy">
+			<span class="flex push-left-50 description">{{ rule.number }}: {{ rule.title }}</span>
+			<div class="flex flexy">
+			{% match rule.summary %}
+				{% when Some with (summary) %}
+					{% match summary %}
+						{% when crate::summary::Summary::EntireRule with (rb) %}
+							{% for cs in rb.matrix %}
+								<span class="flex consequence {{ cs.css_class() }}">
+									{% match cs %}
+										{% when crate::consequences::Consequence::Penalty with (p) %}{{ p }}
+										{% when crate::consequences::Consequence::Warning %}WARN
+										{% when crate::consequences::Consequence::Card with (_) %}CARD
+										{% when crate::consequences::Consequence::OptionalCard with (_) %}CARD?
+										{% when crate::consequences::Consequence::Disable %}DISABLE
+										{% when crate::consequences::Consequence::OptionalDisable %}DISABLE?
+										{% when crate::consequences::Consequence::Disqualification %}DQ
+										{% when crate::consequences::Consequence::OptionalDisqualification %}DQ?
+										{% when crate::consequences::Consequence::RobotRemoval %}REMOVAL
+										{% when crate::consequences::Consequence::NoScore %}NO SCORE
+									{% endmatch %}
+								</span>
+							{% endfor %}
+						{% when crate::summary::Summary::PerSubRule with (_) %}
+							<span class="flex consequence per-subrule-interventions">VARIOUS</span>
+					{% endmatch %}
+				{% when None %}
+			{% endmatch %}
+			</div>
+		</summary>
+		{% match rule.summary %}
+			{% when Some with (summary) %}
+				{% match summary %}
+					{% when crate::summary::Summary::EntireRule with (rb) %}
+						<div class="centered">{{ rb.description|safe }}</div>
+					{% when crate::summary::Summary::PerSubRule with (rbs) %}
+						{% for (subrule, rb) in rbs %}
+							<div class="subrule flexy">
+								<span class="flex push-left-10">{{ rule.number }}.{{ subrule }}:</span>
+								<div class="flex flex-push-left-50 subrule-description">
+								{{ rb.description|safe }}
+								</div>
+
+								<div class="flex flex-push-left-30 flexy">
+								{% for cs in rb.matrix %}
+									<span class="flex consequence {{ cs.css_class() }}">
+										{% match cs %}
+											{% when crate::consequences::Consequence::Penalty with (p) %}{{ p }}
+											{% when crate::consequences::Consequence::Warning %}WARN
+											{% when crate::consequences::Consequence::Card with (_) %}CARD
+											{% when crate::consequences::Consequence::OptionalCard with (_) %}CARD?
+											{% when crate::consequences::Consequence::Disable %}DISABLE
+											{% when crate::consequences::Consequence::OptionalDisable %}DISABLE?
+											{% when crate::consequences::Consequence::Disqualification %}DQ
+											{% when crate::consequences::Consequence::OptionalDisqualification %}DQ?
+											{% when crate::consequences::Consequence::RobotRemoval %}REMOVAL
+											{% when crate::consequences::Consequence::NoScore %}NO SCORE
+										{% endmatch %}
+									</span>
+								{% endfor %}
+								</div>
+							</div>
+						{% endfor %}
+				{% endmatch %}
+			{% when None %}
+		{% endmatch %}
     {{ rule.full_html|safe }}
 		</details>
     {% endfor %}
