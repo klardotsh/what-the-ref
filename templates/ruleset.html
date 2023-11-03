@@ -490,18 +490,7 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 						{% when crate::summary::Summary::EntireRule with (rb) %}
 							{% for cs in rb.matrix %}
 								<span class="flex consequence {{ cs.css_class() }}">
-									{% match cs %}
-										{% when crate::consequences::Consequence::Penalty with (p) %}{{ p }}
-										{% when crate::consequences::Consequence::Warning %}WARN
-										{% when crate::consequences::Consequence::Card with (_) %}CARD
-										{% when crate::consequences::Consequence::OptionalCard with (_) %}CARD?
-										{% when crate::consequences::Consequence::Disable %}DISABLE
-										{% when crate::consequences::Consequence::OptionalDisable %}DISABLE?
-										{% when crate::consequences::Consequence::Disqualification %}DQ
-										{% when crate::consequences::Consequence::OptionalDisqualification %}DQ?
-										{% when crate::consequences::Consequence::RobotRemoval %}REMOVAL
-										{% when crate::consequences::Consequence::NoScore %}NO SCORE
-									{% endmatch %}
+									{{ cs.pill_text() }}
 								</span>
 							{% endfor %}
 						{% when crate::summary::Summary::PerSubRule with (_) %}
@@ -521,24 +510,13 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 							<div class="subrule flexy">
 								<span class="flex push-left-10">{{ rule.number }}.{{ subrule }}:</span>
 								<div class="flex flex-push-left-50 subrule-description">
-								{{ rb.description|safe }}
+									{{ rb.description|safe }}
 								</div>
 
 								<div class="flex flex-push-left-30 flexy">
 								{% for cs in rb.matrix %}
 									<span class="flex consequence {{ cs.css_class() }}">
-										{% match cs %}
-											{% when crate::consequences::Consequence::Penalty with (p) %}{{ p }}
-											{% when crate::consequences::Consequence::Warning %}WARN
-											{% when crate::consequences::Consequence::Card with (_) %}CARD
-											{% when crate::consequences::Consequence::OptionalCard with (_) %}CARD?
-											{% when crate::consequences::Consequence::Disable %}DISABLE
-											{% when crate::consequences::Consequence::OptionalDisable %}DISABLE?
-											{% when crate::consequences::Consequence::Disqualification %}DQ
-											{% when crate::consequences::Consequence::OptionalDisqualification %}DQ?
-											{% when crate::consequences::Consequence::RobotRemoval %}REMOVAL
-											{% when crate::consequences::Consequence::NoScore %}NO SCORE
-										{% endmatch %}
+										{{ cs.pill_text() }}
 									</span>
 								{% endfor %}
 								</div>

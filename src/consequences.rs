@@ -35,6 +35,29 @@ impl Consequence {
         }
         .into()
     }
+
+    pub fn pill_text(self: &Self) -> String {
+        match self {
+            Self::Penalty(p) => p.to_string(),
+            Self::Warning => "WARN".into(),
+            Self::Card(c) => match c {
+                Card::Yellow => "YC",
+                Card::Red => "RC",
+            }
+            .into(),
+            Self::OptionalCard(c) => match c {
+                Card::Yellow => "YC?",
+                Card::Red => "RC?",
+            }
+            .into(),
+            Self::Disable => "DISABLE".into(),
+            Self::OptionalDisable => "DISABLE?".into(),
+            Self::Disqualification => "DQ".into(),
+            Self::OptionalDisqualification => "DQ?".into(),
+            Self::RobotRemoval => "REMOVAL".into(),
+            Self::NoScore => "NO SCORE".into(),
+        }
+    }
 }
 
 impl FromStr for Consequence {
