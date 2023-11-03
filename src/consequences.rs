@@ -2,17 +2,39 @@ use std::{num::NonZeroU8, str::FromStr};
 
 use serde::Deserialize;
 
-#[derive(Debug, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
 #[serde(try_from = "String")]
 pub enum Consequence {
-    Penalty(Penalty),
     Warning,
-    Disable,
-    OptionalDisable,
+    Penalty(Penalty),
     Card(Card),
     OptionalCard(Card),
+    Disable,
+    OptionalDisable,
     Disqualification,
     OptionalDisqualification,
+    RobotRemoval,
+    NoScore,
+}
+
+impl Consequence {
+    pub fn css_class(self: &Self) -> String {
+        match self {
+            Self::Penalty(_) => "penalties",
+            Self::Warning => "mild-interventions",
+            Self::Card(Card::Yellow) => "yellow-card",
+            Self::OptionalCard(Card::Yellow) => "yellow-card optional",
+            Self::Card(Card::Red) => "red-card",
+            Self::OptionalCard(Card::Red) => "red-card optional",
+            Self::Disqualification
+            | Self::OptionalDisqualification
+            | Self::Disable
+            | Self::OptionalDisable
+            | Self::RobotRemoval
+            | Self::NoScore => "big-interventions",
+        }
+        .into()
+    }
 }
 
 impl FromStr for Consequence {
@@ -41,6 +63,14 @@ impl FromStr for Consequence {
 
         if s == "DQ*" {
             return Ok(Self::OptionalDisqualification);
+        }
+
+        if s == "RR" {
+            return Ok(Self::RobotRemoval);
+        }
+
+        if s == "NS" {
+            return Ok(Self::NoScore);
         }
 
         if let Some(card_type) = s.get(0..2).and_then(Card::from_str_opt) {
@@ -84,7 +114,7 @@ impl std::fmt::Display for ConsequenceParseError {
     }
 }
 
-#[derive(Debug, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
 pub struct Penalty {
     pub kind: PenaltyKind,
     pub count: NonZeroU8,
@@ -138,7 +168,7 @@ impl FromStr for Penalty {
     }
 }
 
-#[derive(Debug, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
 pub enum PenaltyKind {
     Minor,
     Major,
@@ -158,7 +188,7 @@ impl PenaltyKind {
     }
 }
 
-#[derive(Debug, Deserialize, Eq, PartialEq)]
+#[derive(Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd)]
 pub enum Card {
     Yellow,
     Red,
