@@ -408,6 +408,17 @@ details {
 .subrule-description {
 	flex-grow: 3 !important;
 }
+
+/* Work around firefox bug where <details> triangles disappear when block level
+   elements are present in the summary (I think), by simply removing them. */
+details summary {
+	list-style-type: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+/* End workaround */
   </style>
 
 	<script type="text/javascript">
@@ -462,6 +473,7 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 		<button onclick="closeAllDetails()">Close All Sections On Page</button>
 		
     <h1>Glossary</h1>
+		<p class="centered">Click/tap any of these to expand.</p>
 
     {% for term in glossary.terms %}
 		<details>
@@ -475,6 +487,7 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 
     <h1>Rules</h1>
 
+		<p class="centered">Click/tap any of these to expand.</p>
     <p class="centered">
 			Consequence hints ending in a ? indicate optional / head ref discretion.
     </p>
