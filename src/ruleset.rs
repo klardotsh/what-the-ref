@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 
 use askama::Template;
 use indexmap::IndexMap;
-use log::{debug, info};
+use log::{debug, error, info};
 use serde::Deserialize;
 
 use crate::consts::DIRECTORY_GLOSSARY;
@@ -11,8 +11,11 @@ use crate::rule::Rule;
 use crate::rule_number::RuleNumber;
 use crate::ruleset_load_error::RulesetLoadError;
 use crate::ruleset_meta::RulesetMeta;
+use crate::summary::Summary;
 
 const ASSUMED_NUMBER_OF_RULES: usize = 50;
+
+type RulesByNumber = IndexMap<RuleNumber, Rule>;
 
 #[derive(Debug, Deserialize, Template)]
 #[template(path = "ruleset.html")]
@@ -22,7 +25,7 @@ pub struct Ruleset {
     pub glossary: Glossary,
     pub meta: RulesetMeta,
     #[serde(skip_deserializing)]
-    pub rules: IndexMap<RuleNumber, Rule>,
+    pub rules: RulesByNumber,
 }
 
 impl Ruleset {
@@ -40,7 +43,7 @@ impl Ruleset {
         let glossary = Glossary::from_markdown_directory(&path)?;
         assert!(path.pop());
 
-        let mut rules = IndexMap::with_capacity(ASSUMED_NUMBER_OF_RULES);
+        let mut rules: RulesByNumber = IndexMap::with_capacity(ASSUMED_NUMBER_OF_RULES);
 
         for source in meta.sources.iter() {
             path.push(&source.directory);
@@ -74,6 +77,24 @@ impl Ruleset {
                 // way. Software's gotta ship, yo, and events are in... 3 days
                 // from time of writing this comment.
                 debug!("parsed rule: {:?}", &rule);
+
+                // Q&A are special kinds of rules which augment other rules from the manuals. Go find those relevant rules and let them know the
+                if let Some(Summary::QA(briefing)) = &rule.summary {
+                    if let Some(references_rules) = &briefing.references_rules {
+                        for refd_rule in references_rules {
+                            if let Some(ref mut source_rule) = rules.get_mut(refd_rule) {
+                                source_rule.backreferences.push(rule.number.clone());
+                                source_rule.backreferences.sort();
+                            } else {
+                                error!(
+                                    "{} refers to unrecognized rule {}",
+                                    &rule.number, &refd_rule
+                                );
+                            }
+                        }
+                    }
+                }
+
                 rules.insert(rule.number.clone(), rule);
             }
 

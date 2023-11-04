@@ -15,6 +15,8 @@ pub struct Rule {
     pub title: String,
     pub summary: Option<Summary>,
     pub full_html: String,
+    // TODO: Take rule numbers by reference, not by copy.
+    pub backreferences: Vec<RuleNumber>,
 }
 
 impl Rule {
@@ -41,6 +43,7 @@ impl Rule {
                     .extract_frontmatter_text()
                     .map(|fm| Summary::from_toml_front_matter(&fm)),
                 full_html: markdown_ast.render(),
+                backreferences: Vec::new(),
             })
         } else {
             Err(RulesetLoadError::RuleMissingNumber(rule_file_basename))

@@ -37,6 +37,8 @@ accessed = "2023-10-26T00:00:00-07:00"
 section = "4.5.1"
 section-name = "Safety Rules"
 
+# QA **must** be loaded last as it refers to, and modifies the in-memory objects
+# of, rules defined in all above sections!
 [[rulesets.sources]]
 directory = "qa"
 
