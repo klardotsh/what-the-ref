@@ -2,6 +2,8 @@
 alias_stems = [
   "yellow card",
   "red card",
+  "minor penalty",
+  "major penalty"
 ]
 ---
 
