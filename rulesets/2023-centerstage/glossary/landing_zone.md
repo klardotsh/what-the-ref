@@ -1,3 +1,10 @@
+---
+alias_stems = [
+  "landing zone 1",
+  "landing zone 2",
+  "landing zone 3"
+]
+---
 # Landing Zone
 
 |Alliance Neutral| |Areas| outside the |Playing Field Perimeter| on the audience

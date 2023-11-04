@@ -1,3 +1,14 @@
+---
+alias_stems = [
+  "pixel stacks",
+  "pixel stack",
+  "pixels",
+  "purple pixel",
+  "white pixel",
+  "yellow pixel",
+  "green pixel"
+]
+---
 # Pixel
 
 A hexagonal shaped |Scoring Element|, 3-inches (76.2 mm) across by 0.5-inches
