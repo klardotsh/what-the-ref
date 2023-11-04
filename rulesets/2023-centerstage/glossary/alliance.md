@@ -1,3 +1,8 @@
+---
+alias_stems = [
+  "alliance robot"
+]
+---
 # Alliance
 
 Each FIRST Tech Challenge |Match| consists of two, two-|Team| Alliances designated as red or
