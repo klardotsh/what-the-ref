@@ -38,9 +38,9 @@ pub struct Resource {
     pub anchor: String,
     pub accessed: chrono::DateTime<chrono::Utc>,
     // // TODO: narrow type, manual sections can be parsed semantically
-    pub section: String,
+    pub section: Option<String>,
     #[serde(rename = "section-name")]
-    pub section_name: String,
+    pub section_name: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]

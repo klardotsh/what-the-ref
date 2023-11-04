@@ -8,6 +8,7 @@ mod consts;
 mod glossary;
 mod interlink_md;
 mod markdown;
+mod qa_briefing;
 mod rule;
 mod rule_briefing;
 mod rule_number;

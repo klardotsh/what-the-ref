@@ -517,6 +517,7 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 							{% endfor %}
 						{% when crate::summary::Summary::PerSubRule with (_) %}
 							<span class="flex consequence per-subrule-interventions">VARIOUS</span>
+					{% when crate::summary::Summary::QA with (_) %}
 					{% endmatch %}
 				{% when None %}
 			{% endmatch %}
@@ -544,6 +545,8 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 								</div>
 							</div>
 						{% endfor %}
+					{% when crate::summary::Summary::QA with (qa) %}
+						<div class="centered">This Q&A references {% match qa.references_rules %}{% when Some(r) %}{{ r.len() }}{% when None %}0{% endmatch %} rules, linked within.</div>
 				{% endmatch %}
 			{% when None %}
 		{% endmatch %}

@@ -37,6 +37,15 @@ accessed = "2023-10-26T00:00:00-07:00"
 section = "4.5.1"
 section-name = "Safety Rules"
 
+[[rulesets.sources]]
+directory = "qa"
+
+[rulesets.sources.resource]
+href = "https://ftc-qa.firstinspires.org/rss/answers.rss"
+name = "Q&A"
+anchor = "qa"
+accessed = "2023-11-03T19:00:00-07:00"
+
 [rulesets.source-material]
 # The TOML spec may natively understand RFC 3339 dates, but evidently
 # something about the TOML crate does not: removing the strings here results in a

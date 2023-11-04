@@ -1,13 +1,16 @@
+use std::fmt::Display;
 use std::num::{NonZeroU8, ParseIntError};
 use std::str::FromStr;
 
 use serde::Deserialize;
 
 #[derive(Clone, Eq, Debug, Deserialize, Hash, Ord, PartialEq, PartialOrd)]
+#[serde(try_from = "String")]
 pub enum RuleNumber {
     Safety(NonZeroU8),
     General(NonZeroU8),
     GameSpecific(NonZeroU8),
+    QA(NonZeroU8),
 }
 
 impl std::fmt::Display for RuleNumber {
@@ -16,6 +19,7 @@ impl std::fmt::Display for RuleNumber {
             Self::Safety(num) => write!(f, "S{:0>2}", num),
             Self::General(num) => write!(f, "G{:0>2}", num),
             Self::GameSpecific(num) => write!(f, "GS{:0>2}", num),
+            Self::QA(num) => write!(f, "Q{:0>3}", num),
         }
     }
 }
@@ -47,7 +51,22 @@ impl FromStr for RuleNumber {
             );
         }
 
+        if s.starts_with("q") {
+            return s.get(1..).map_or_else(
+                || Err(Self::Err::MissingNumber),
+                |num| num.parse().map(Self::QA).map_err(|e| e.into()),
+            );
+        }
+
         Err(Self::Err::Unrecognizable)
+    }
+}
+
+impl TryFrom<String> for RuleNumber {
+    type Error = RuleNumberParseError;
+
+    fn try_from(it: String) -> Result<Self, Self::Error> {
+        Self::from_str(&it)
     }
 }
 
@@ -56,6 +75,16 @@ pub enum RuleNumberParseError {
     MissingNumber,
     UnparseableNumber(ParseIntError),
     Unrecognizable,
+}
+
+impl Display for RuleNumberParseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::MissingNumber => write!(f, "missing number"),
+            Self::UnparseableNumber(_) => write!(f, "unparseable rule number integer"),
+            Self::Unrecognizable => write!(f, "unrecognizable"),
+        }
+    }
 }
 
 impl From<ParseIntError> for RuleNumberParseError {
