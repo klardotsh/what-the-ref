@@ -46,14 +46,14 @@ impl Consequence {
             }
             .into(),
             Self::OptionalCard(c) => match c {
-                Card::Yellow => "YC?",
-                Card::Red => "RC?",
+                Card::Yellow => "YC*",
+                Card::Red => "RC*",
             }
             .into(),
             Self::Disable => "DISABLE".into(),
-            Self::OptionalDisable => "DISABLE?".into(),
+            Self::OptionalDisable => "DISABLE*".into(),
             Self::Disqualification => "DQ".into(),
-            Self::OptionalDisqualification => "DQ?".into(),
+            Self::OptionalDisqualification => "DQ*".into(),
             Self::RobotRemoval => "REMOVAL".into(),
             Self::NoScore => "NO SCORE".into(),
         }
@@ -152,10 +152,10 @@ impl std::fmt::Display for Penalty {
             "{}x{}{}{}",
             self.count,
             match self.kind {
-                PenaltyKind::Minor => "Mi",
+                PenaltyKind::Minor => "mi",
                 PenaltyKind::Major => "Ma",
             },
-            if self.at_hr_discretion { "?" } else { "" },
+            if self.at_hr_discretion { "*" } else { "" },
             if self.repeat_5s { "/5s" } else { "" },
         )
     }

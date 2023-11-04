@@ -418,6 +418,15 @@ details summary {
 summary::-webkit-details-marker {
   display: none;
 }
+
+details.rule > h1 {
+	display: none;
+}
+
+details[open] summary .description {
+  font-weight: bold;
+  font-size: 150%;
+}
 /* End workaround */
   </style>
 
@@ -489,7 +498,7 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 
 		<p class="centered">Click/tap any of these to expand.</p>
     <p class="centered">
-			Consequence hints ending in a ? indicate optional / head ref discretion.
+			Consequence hints ending in a * indicate optional / head ref discretion.
     </p>
 
     {% for (_, rule) in rules %}
