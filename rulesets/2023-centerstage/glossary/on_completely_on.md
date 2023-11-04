@@ -1,3 +1,7 @@
+---
+alias_stems = ["on", "completely on"]
+---
+
 # On / Completely On
 
 An object that is physically in contact with and at least partially |Supported|

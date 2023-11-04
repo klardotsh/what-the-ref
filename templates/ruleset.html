@@ -384,6 +384,12 @@ details {
 	color: black;
 }
 
+.qa-unreviewed {
+	background-color: lightgray;
+	border: 1px dashed red;
+	color: black;
+}
+
 .centered {
 	text-align: center;
 }
@@ -485,8 +491,8 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 		<p class="centered">Click/tap any of these to expand.</p>
 
     {% for term in glossary.terms %}
-		<details>
-		<summary>{{ term.name }}</summary>
+		<details class="rule">
+		<summary><span class="description">{{ term.name }}</span></summary>
     {% for anchor in term.anchors %}
     <a id="{{ anchor }}" style="visibility: hidden"></a>
     {% endfor %}
@@ -517,7 +523,10 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 							{% endfor %}
 						{% when crate::summary::Summary::PerSubRule with (_) %}
 							<span class="flex consequence per-subrule-interventions">VARIOUS</span>
-					{% when crate::summary::Summary::QA with (_) %}
+					{% when crate::summary::Summary::QA with (qa) %}
+						{% if !qa.reviewed %}
+							<span class="flex consequence qa-unreviewed">UNREVIEWED</span>
+						{% endif %}
 					{% endmatch %}
 				{% when None %}
 			{% endmatch %}

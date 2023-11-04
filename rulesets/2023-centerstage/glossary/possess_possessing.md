@@ -1,3 +1,7 @@
+---
+alias_stems = ["possess"]
+---
+
 # Possess / Possessing
 
 An object is Possessed by a |Robot| if, as the |Robot| moves or changes
