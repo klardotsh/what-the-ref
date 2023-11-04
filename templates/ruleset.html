@@ -522,7 +522,7 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 
     {% for (_, rule) in rules %}
 		<details class="rule">
-		<a id="{{ rule.number }}" style="visibility: hidden"></a>
+		<a id="{{ rule.number.anchor() }}" style="visibility: hidden"></a>
 		<summary class="flexy">
 			<span class="flex push-left-50 description">{{ rule.number }}: {{ rule.title }}</span>
 			<div class="flex flexy">
@@ -579,7 +579,7 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
 			<div class="backlinks">
 			<h4>This rule is referenced by...</h4>
 			{% for ref in rule.backreferences %}
-				<span class="backlink"><a href="#{{ ref }}">{{ ref }}</a></span>
+				<span class="backlink"><a href="#{{ ref.anchor() }}">{{ ref }}</a></span>
 			{% endfor %}
 		{% endif %}
 		</details>

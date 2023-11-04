@@ -4,6 +4,8 @@ use std::str::FromStr;
 
 use serde::Deserialize;
 
+use crate::text_normalization::anchorize;
+
 #[derive(Clone, Eq, Debug, Deserialize, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(try_from = "String")]
 pub enum RuleNumber {
@@ -11,6 +13,12 @@ pub enum RuleNumber {
     General(NonZeroU8),
     GameSpecific(NonZeroU8),
     QA(NonZeroU8),
+}
+
+impl RuleNumber {
+    pub fn anchor(&self) -> String {
+        anchorize(&self.to_string())
+    }
 }
 
 impl std::fmt::Display for RuleNumber {
