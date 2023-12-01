@@ -19,6 +19,18 @@ impl RuleNumber {
     pub fn anchor(&self) -> String {
         anchorize(&self.to_string())
     }
+
+    /// In our templates, we can't store a pointer to the prior rule in the loop to know
+    /// when sections change. Instead, we'll take advantage of the fact that rules are
+    /// always expected to be sorted numerically per section, and let the template know when
+    /// a new section has begun.
+    pub fn begins_new_section(&self) -> bool {
+        match self {
+            Self::Safety(num) | Self::General(num) | Self::GameSpecific(num) | Self::QA(num) => unsafe {
+                *num == NonZeroU8::new_unchecked(1)
+            },
+        }
+    }
 }
 
 impl std::fmt::Display for RuleNumber {

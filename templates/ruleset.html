@@ -394,6 +394,18 @@ details {
 	text-align: center;
 }
 
+/* This rule combos with the ~ rule below to remove the 5em margin when starting
+   the first rules section (safety) without resorting to markup hacks to do so.
+   https://stackoverflow.com/a/5293095
+ */
+.rule.begins-new-section {
+	margin-top: 0;
+}
+
+.rule.begins-new-section ~ .rule.begins-new-section {
+	margin-top: 5em;
+}
+
 .rule ol {
 	list-style-type: lower-alpha;
 }
@@ -521,7 +533,7 @@ href="//github.com/klardotsh/what-the-ref">contribute</a>, it's open source!
     </p>
 
     {% for (_, rule) in rules %}
-		<details class="rule">
+	<details class="rule {% if rule.number.begins_new_section() %}begins-new-section{% endif %}">
 		<a id="{{ rule.number.anchor() }}" style="visibility: hidden"></a>
 		<summary class="flexy">
 			<span class="flex push-left-50 description">{{ rule.number }}: {{ rule.title }}</span>
