@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2021"
 license = "0BSD"
 default-run = "what_the_ref"
+rust-version = "1.80"
 
 [dependencies]
 askama = "0.12"
