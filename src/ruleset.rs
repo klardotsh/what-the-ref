@@ -125,9 +125,19 @@ impl Ruleset {
                     }
                     p {
                         (format!(
-                            "This FIRST Tech Challenge resource for {} generated {}",
-                            self.meta.years[0],
+                            "This {} resource for {} generated {}.",
+                            self.meta.program.display_name(),
+                            self.meta.championship_year,
                             self.generated.to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+                        ))
+                    }
+                    p {
+                        "All information within was pulled "
+                        a href=(self.meta.source_material.href) { "from FIRST" }
+                        (format!(
+                            " on {} (UTC), which includes as recent as Team Update {}.",
+                            self.meta.source_material.accessed.date_naive(),
+                            self.meta.source_material.latest_team_update_included,
                         ))
                     }
                 }
@@ -136,7 +146,7 @@ impl Ruleset {
                     p class="disclaimer" {
                         "This is not an official or FIRST-endorsed resource. It's simply a side project written by Josh from Washington. Do not use it as your sole resource at an event: "
                         em { "always" }
-                        " retain and refer to a copy of each Game Manual's PDF and to the latest PDFs of the Q&A. If you have questions, concerns, or feedback, email me at josh [at] klar [dot] sh, or feel free to "
+                        " retain and refer to a copy of the Game Manual PDF and to the latest PDFs of the Q&A. If you have questions, concerns, or feedback, email me at josh [at] klar [dot] sh, or feel free to "
                         a href="//github.com/klardotsh/what-the-ref" { "contribute" }
                         ", it's open source!"
                     }

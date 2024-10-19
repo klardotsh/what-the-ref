@@ -58,6 +58,6 @@ fn main() {
 // TODO: move me somewhere! at this point I'm racing against the clock so code
 // cleanliness is out the window, just gotta ship
 fn render_rules(rs: &Ruleset) {
-    let mut file = std::fs::File::create(&format!("{}.html", rs.meta.years[0])).unwrap();
+    let mut file = std::fs::File::create(&format!("{}.html", rs.meta.championship_year)).unwrap();
     file.write_all(rs.render().into_string().as_bytes()).unwrap()
 }

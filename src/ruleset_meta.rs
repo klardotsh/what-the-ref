@@ -12,44 +12,42 @@ struct RulesetMetas {
 
 #[derive(Debug, Deserialize)]
 pub struct RulesetMeta {
-    pub years: [u16; 2],
+    pub championship_year: u16,
+    pub program: FIRSTProgram,
     pub directory: String,
     pub shortname: String,
     pub longname: String,
 
     pub sources: Vec<Source>,
-
-    #[serde(rename = "source-material")]
     pub source_material: SourceMaterial,
+}
+
+#[derive(Debug, Deserialize, Eq, Hash, PartialEq)]
+pub enum FIRSTProgram {
+    FRC,
+    FTC,
+}
+
+impl FIRSTProgram {
+    pub fn display_name(&self) -> &str {
+        match self {
+            Self::FRC => "FIRST Robotics Competition",
+            Self::FTC => "FIRST Tech Challenge",
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Eq, PartialEq)]
 pub struct Source {
+    pub display_name: String,
     pub directory: String,
-    pub resource: Resource,
-}
-
-#[derive(Debug, Deserialize, Eq, PartialEq)]
-pub struct Resource {
-    // Could use http::Uri here, but that pulls a dep for type parsing purposes
-    // only, feels like overengineering for now.
-    pub href: String,
-    pub name: String,
-    pub anchor: String,
-    pub accessed: chrono::DateTime<chrono::Utc>,
-    // // TODO: narrow type, manual sections can be parsed semantically
-    pub section: Option<String>,
-    #[serde(rename = "section-name")]
-    pub section_name: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct SourceMaterial {
     pub accessed: chrono::DateTime<chrono::Utc>,
-    #[serde(rename = "gm1-traditional")]
-    pub manual_pt1_traditional_link: String,
-    #[serde(rename = "gm2-traditional")]
-    pub manual_pt2_traditional_link: String,
+    pub href: String,
+    pub latest_team_update_included: u8,
 }
 
 pub fn load_ruleset_metas_from_disk(
