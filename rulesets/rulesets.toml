@@ -9,6 +9,10 @@ longname = "Into The Deep℠ presented by RTX"
 accessed = "2024-10-18 17:54:05-07:00"
 href = "https://ftc-resources.firstinspires.org/file/ftc/game/manual"
 latest_team_update_included = 3
+# Technically I tend to pull text from the HTML version of the manual, eg.
+# https://ftc-resources.firstinspires.org/file/ftc/game/cm-html/Competition%20Manual%20-%20V4.1.htm.
+# This page is usually in varying degrees of brokenness and is not fit for
+# linking to directly, but it's far nicer to copy text from than the PDFs.
 
 [[rulesets.sources]]
 display_name = "Game Rules: Personal Safety (11.1)"
