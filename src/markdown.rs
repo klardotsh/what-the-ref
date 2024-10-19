@@ -19,7 +19,7 @@ impl AST {
             .map(|node| Self(node))
     }
 
-    pub fn extract_frontmatter_text(self: &Self) -> Option<String> {
+    pub fn extract_frontmatter_text(&self) -> Option<String> {
         self.0
             .children
             .iter()
@@ -28,12 +28,20 @@ impl AST {
             .flatten()
     }
 
-    pub fn extract_header(self: &Self) -> Option<String> {
+    pub fn extract_header(&self) -> Option<String> {
         self.0
             .children
             .iter()
             .find(|c| c.is::<ATXHeading>())
             .map(|node| node.collect_text())
+    }
+
+    pub fn purge_header(&mut self) -> Option<Node> {
+        self.0
+            .children
+            .iter()
+            .position(|c| c.is::<ATXHeading>())
+            .map(|index| self.0.children.remove(index))
     }
 
     pub fn render(self: &Self) -> String {
@@ -89,13 +97,19 @@ fn test_markdown_interlink() {
     // bang-bang is the new interlink syntax, it should be transformed just like how `|this
     // syntax|` used to be
     assert_eq!(
-        Parser::new().parse(r"Hello [world](!!)").render().trim_end(),
+        Parser::new()
+            .parse(r"Hello [world](!!)")
+            .render()
+            .trim_end(),
         "<p>Hello <a href=\"#world\">world</a></p>"
     );
 
     // but any other number of bangs are left untouched
     assert_eq!(
-        Parser::new().parse(r"Hello [world](!!!)").render().trim_end(),
+        Parser::new()
+            .parse(r"Hello [world](!!!)")
+            .render()
+            .trim_end(),
         "<p>Hello <a href=\"!!!\">world</a></p>"
     );
 }

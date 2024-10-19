@@ -23,11 +23,15 @@ impl Term {
             .into_owned();
         debug!("found term file {}", term_file_path.to_string_lossy());
 
-        let markdown_ast = crate::markdown::AST::read_from_file(path)?;
+        let (markdown_ast, header) = {
+            let mut ast = crate::markdown::AST::read_from_file(path)?;
+            let header = ast.extract_header().ok_or_else(|| {
+                RulesetLoadError::MissingHeaderForTerm(term_path_string.clone().into())
+            })?;
+            ast.purge_header();
 
-        let header = markdown_ast.extract_header().ok_or_else(|| {
-            RulesetLoadError::MissingHeaderForTerm(term_path_string.clone().into())
-        })?;
+            (ast, header)
+        };
 
         let anchor = anchorize(&header);
 
