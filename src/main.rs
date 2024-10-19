@@ -5,7 +5,6 @@ use log::{error, info};
 mod consequences;
 mod consts;
 mod glossary;
-mod interlink_md;
 mod markdown;
 mod qa_briefing;
 mod rule;
