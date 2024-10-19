@@ -155,29 +155,40 @@ impl Ruleset {
             }
 
             div id="content" {
-                h1 { "Glossary" }
-                (click_tap_expand_msg())
-                @for term in &self.glossary.terms {
-                    details class="rule" {
-                        summary { span class="description" { (term.name) } }
+                (self.render_rules())
+                (self.render_glossary())
+            }
+        }
+    }
 
-                        @for anchor in &term.anchors {
-                            (jumpable_anchor(anchor))
-                        }
+    fn render_glossary(&self) -> Markup {
+        html! {
+            h1 { "Glossary" }
+            (click_tap_expand_msg())
+            @for term in &self.glossary.terms {
+                details class="rule" {
+                    summary { span class="description" { (term.name) } }
 
-                        (maud::PreEscaped(&term.rendered_html))
+                    @for anchor in &term.anchors {
+                        (jumpable_anchor(anchor))
                     }
-                }
 
-                h1 { "Rules" }
-                (click_tap_expand_msg())
-                p class="centered" {
-                    "Consequence hints ending in a * indicate optional / head ref discretion."
+                    (maud::PreEscaped(&term.rendered_html))
                 }
+            }
+        }
+    }
 
-                @for (_, rule) in &self.rules {
-                    (render_rule(rule))
-                }
+    fn render_rules(&self) -> Markup {
+        html! {
+            h1 { "Rules" }
+            (click_tap_expand_msg())
+            p class="centered" {
+                "Consequence hints ending in a * indicate optional / head ref discretion."
+            }
+
+            @for (_, rule) in &self.rules {
+                (render_rule(rule))
             }
         }
     }
