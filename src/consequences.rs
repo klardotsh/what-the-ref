@@ -6,6 +6,7 @@ use serde::Deserialize;
 #[serde(try_from = "String")]
 pub enum Consequence {
     Warning,
+    WarningEscCard(Card),
     Penalty(Penalty),
     Card(Card),
     OptionalCard(Card),
@@ -22,6 +23,8 @@ impl Consequence {
         match self {
             Self::Penalty(_) => "penalties",
             Self::Warning => "mild-interventions",
+            Self::WarningEscCard(Card::Yellow) => "verbal-esc-yellow-card",
+            Self::WarningEscCard(Card::Red) => "verbal-esc-red-card",
             Self::Card(Card::Yellow) => "yellow-card",
             Self::OptionalCard(Card::Yellow) => "yellow-card optional",
             Self::Card(Card::Red) => "red-card",
@@ -40,6 +43,10 @@ impl Consequence {
         match self {
             Self::Penalty(p) => p.to_string(),
             Self::Warning => "WARN".into(),
+            Self::WarningEscCard(c) => match c {
+                Card::Yellow => "W>YC",
+                Card::Red => "W>RD",
+            }.into(),
             Self::Card(c) => match c {
                 Card::Yellow => "YC",
                 Card::Red => "RC",
@@ -70,6 +77,14 @@ impl FromStr for Consequence {
 
         if s == "W" {
             return Ok(Self::Warning);
+        }
+
+        if s == "W>YC" {
+            return Ok(Self::WarningEscCard(Card::Yellow))
+        }
+
+        if s == "W>RC" {
+            return Ok(Self::WarningEscCard(Card::Red))
         }
 
         if s == "D" {
