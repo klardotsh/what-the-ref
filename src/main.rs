@@ -1,6 +1,5 @@
 use std::io::Write;
 
-use askama::Template;
 use log::{error, info};
 
 mod consequences;
@@ -60,5 +59,5 @@ fn main() {
 // cleanliness is out the window, just gotta ship
 fn render_rules(rs: &Ruleset) {
     let mut file = std::fs::File::create(&format!("{}.html", rs.meta.years[0])).unwrap();
-    file.write_all(rs.render().unwrap().as_bytes()).unwrap()
+    file.write_all(rs.render().into_string().as_bytes()).unwrap()
 }

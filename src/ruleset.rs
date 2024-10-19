@@ -1,9 +1,9 @@
 use std::path::{Path, PathBuf};
 
-use askama::Template;
 use indexmap::IndexMap;
 use log::{debug, error, info};
 use serde::Deserialize;
+use maud::{DOCTYPE, html, Markup};
 
 use crate::consts::DIRECTORY_GLOSSARY;
 use crate::glossary::Glossary;
@@ -17,8 +17,7 @@ const ASSUMED_NUMBER_OF_RULES: usize = 50;
 
 type RulesByNumber = IndexMap<RuleNumber, Rule>;
 
-#[derive(Debug, Deserialize, Template)]
-#[template(path = "ruleset.html")]
+#[derive(Debug, Deserialize)]
 pub struct Ruleset {
     #[serde(skip_deserializing, default = "Default::default")]
     pub generated: chrono::DateTime<chrono::Utc>,
@@ -109,5 +108,176 @@ impl Ruleset {
             rules,
             generated: chrono::Utc::now(),
         })
+    }
+
+    pub fn render(&self) -> Markup {
+        html! {
+            (DOCTYPE)
+            meta charset="utf-8";
+            meta name="viewport" content="width=device-width, initial-scale=1.0";
+            title { (format!("{} | What The Ref?", self.meta.longname)) }
+            style { (include_str!("../main.css")) }
+
+            header {
+                nav {
+                    h1 class="gamename" {
+                        (format!("Unofficial Augmented Manual for {}", self.meta.longname))
+                    }
+                    p {
+                        (format!(
+                            "This FIRST Tech Challenge resource for {} generated {}",
+                            self.meta.years[0],
+                            self.generated.to_rfc3339_opts(chrono::SecondsFormat::Secs, true),
+                        ))
+                    }
+                }
+
+                blockquote {
+                    p class="disclaimer" {
+                        "This is not an official or FIRST-endorsed resource. It's simply a side project written by Josh from Washington. Do not use it as your sole resource at an event: "
+                        em { "always" }
+                        " retain and refer to a copy of each Game Manual's PDF and to the latest PDFs of the Q&A. If you have questions, concerns, or feedback, email me at josh [at] klar [dot] sh, or feel free to "
+                        a href="//github.com/klardotsh/what-the-ref" { "contribute" }
+                        ", it's open source!"
+                    }
+                }
+            }
+
+            div id="content" {
+                h1 { "Glossary" }
+                (click_tap_expand_msg())
+                @for term in &self.glossary.terms {
+                    details class="rule" {
+                        summary { span class="description" { (term.name) } }
+
+                        @for anchor in &term.anchors {
+                            a id=(anchor) style="visibility: hidden" {}
+                        }
+
+                        (maud::PreEscaped(&term.rendered_html))
+                    }
+                }
+
+                h1 { "Rules" }
+                (click_tap_expand_msg())
+                p class="centered" {
+                    "Consequence hints ending in a * indicate optional / head ref discretion."
+                }
+
+                @for (_, rule) in &self.rules {
+                    (render_rule(rule))
+                }
+            }
+        }
+    }
+}
+
+fn click_tap_expand_msg() -> Markup {
+    html! {
+        p class="centered" { "Click/tap any of these to expand." }
+    }
+}
+
+fn render_rule(rule: &Rule) -> Markup {
+    let classes = if rule.number.begins_new_section() {
+        "rule begins-new-section"
+    } else {
+        "rule"
+    };
+
+    html! {
+        details class=(classes) {
+            a id=(rule.number.anchor()) style="visibility: hidden" {}
+            summary class="flexy" { (render_rule_header(&rule)) }
+            (render_rule_details(&rule))
+        }
+    }
+}
+
+fn render_rule_header(rule: &Rule) -> Markup {
+    html! {
+        span class="flex push-left-50 description" {
+            (format!("{}: {}", rule.number, rule.title))
+        }
+
+        div class="flex flexy" {
+            @if let Some(summary) = &rule.summary {
+                @match summary {
+                    Summary::EntireRule(rb) => @for cs in &rb.matrix {
+                        span class=(format!("flex consequence {}", cs.css_class())) {
+                            (cs.pill_text())
+                        }
+                    },
+                    Summary::PerSubRule(_) => span class="flex consequence per-subrule-interventions" {
+                        "VARIOUS"
+                    },
+                    Summary::QA(qa) => @if !qa.reviewed {
+                        span class="flex consequence qa-unreviewed" { "UNREVIEWED" }
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn render_rule_details(rule: &Rule) -> Markup {
+    html! {
+        (render_rule_detail_prelude(rule))
+        (maud::PreEscaped(&rule.full_html))
+        (render_rule_backreferences(rule))
+    }
+}
+
+fn render_rule_detail_prelude(rule: &Rule) -> Markup {
+    html! {
+        @if let Some(summary) = &rule.summary {
+            @match summary {
+                Summary::EntireRule(rb) => div class="centered" {
+                    (maud::PreEscaped(&rb.description))
+                },
+                Summary::PerSubRule(rbs) => @for (subrule, rb) in rbs {
+                    div class="subrule flexy" {
+                        span class="flex push-left-10" {
+                            (format!("{}.{}", rule.number, subrule))
+                        }
+                        div class="flex flex-push-left-50 subrule-description" {
+                            (maud::PreEscaped(&rb.description))
+                        }
+                        div class="flex flex-push-left-30 flexy" {
+                            @for cs in &rb.matrix {
+                                span class=(format!("flex consequence {}", cs.css_class())) {
+                                    (cs.pill_text())
+                                }
+                            }
+                        }
+                    }
+                },
+                Summary::QA(qa) => {
+                    div class="centered" {
+                        "This Q&A references "
+                        @match &qa.references_rules {
+                            Some(r) => (r.len().to_string()),
+                            None => ("0".to_string()),
+                        }
+                        " rules, linked within."
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn render_rule_backreferences(rule: &Rule) -> Markup {
+    html! {
+        @if !rule.backreferences.is_empty() {
+            div class="backlinks" {
+                h4 { "This rule is referenced by..." }
+                @for refe in &rule.backreferences {
+                    span class="backlink" {
+                        a href=(format!("#{}", refe.anchor())) { (refe) }
+                    }
+                }
+            }
+        }
     }
 }
