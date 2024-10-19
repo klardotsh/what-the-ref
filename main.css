@@ -407,6 +407,11 @@ body {
 		flex-grow: 3 !important;
 	}
 
+	.jump-to {
+		scroll-margin-top: 3em;
+		visibility: hidden;
+	}
+
 	/* Work around firefox bug where <details> triangles disappear when block level
 	elements are present in the summary (I think), by simply removing them. */
 	details summary {

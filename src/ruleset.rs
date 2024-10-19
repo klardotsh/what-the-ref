@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use indexmap::IndexMap;
 use log::{debug, error, info};
 use serde::Deserialize;
-use maud::{DOCTYPE, html, Markup};
+use maud::{DOCTYPE, html, Markup, PreEscaped};
 
 use crate::consts::DIRECTORY_GLOSSARY;
 use crate::glossary::Glossary;
@@ -116,7 +116,8 @@ impl Ruleset {
             meta charset="utf-8";
             meta name="viewport" content="width=device-width, initial-scale=1.0";
             title { (format!("{} | What The Ref?", self.meta.longname)) }
-            style { (include_str!("../main.css")) }
+            style { (PreEscaped(include_str!("../main.css"))) }
+            script type="text/javascript" { (PreEscaped(include_str!("../main.js"))) }
 
             header {
                 nav {
@@ -161,7 +162,7 @@ impl Ruleset {
                         summary { span class="description" { (term.name) } }
 
                         @for anchor in &term.anchors {
-                            a id=(anchor) style="visibility: hidden" {}
+                            (jumpable_anchor(anchor))
                         }
 
                         (maud::PreEscaped(&term.rendered_html))
@@ -197,7 +198,7 @@ fn render_rule(rule: &Rule) -> Markup {
 
     html! {
         details class=(classes) {
-            a id=(rule.number.anchor()) style="visibility: hidden" {}
+            (jumpable_anchor(&rule.number.anchor()))
             summary class="flexy" { (render_rule_header(&rule)) }
             (render_rule_details(&rule))
         }
@@ -289,5 +290,11 @@ fn render_rule_backreferences(rule: &Rule) -> Markup {
                 }
             }
         }
+    }
+}
+
+fn jumpable_anchor(id: &str) -> Markup {
+    html! {
+        a id=(id) class="jump-to" {}
     }
 }
