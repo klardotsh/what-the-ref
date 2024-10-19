@@ -81,367 +81,367 @@ body {
 /* these two media blocks are to make Chromium suck less at rendering
  * downscaled images: https://stackoverflow.com/a/69137897
  */
-	@media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+@media screen and (-webkit-min-device-pixel-ratio:0) and (min-resolution:.001dpcm) {
+	img {
+		image-rendering: -webkit-optimize-contrast !important;
+	}
+}
+/* Unset for Safari 11+ */
+@media not all and (min-resolution:.001dpcm) {
+	@supports (-webkit-appearance:none) and (stroke-color:transparent) {
 		img {
-			image-rendering: -webkit-optimize-contrast !important;
+			image-rendering: unset !important;
 		}
 	}
-	/* Unset for Safari 11+ */
-	@media not all and (min-resolution:.001dpcm) {
-		@supports (-webkit-appearance:none) and (stroke-color:transparent) {
-			img {
-				image-rendering: unset !important;
-			}
-		}
-	}
+}
 
-	header {
-		padding-bottom: 0.5em;
-		border-bottom: 0.15em dotted lightgrey;
-	}
+header {
+	padding-bottom: 0.5em;
+	border-bottom: 0.15em dotted lightgrey;
+}
 
-	header ul li img {
-		max-height: 5em;
-	}
+header ul li img {
+	max-height: 5em;
+}
 
-	nav {
-		overflow: auto;
-		text-align: center;
-		margin: auto;
-	}
+nav {
+	overflow: auto;
+	text-align: center;
+	margin: auto;
+}
 
-	nav::after {
-		clear: both;
-	}
+nav::after {
+	clear: both;
+}
 
-	nav ul {
-		margin-left: 0;
-		margin-right: 0;
-		padding-left: 0;
-		padding-right: 0;
-	}
+nav ul {
+	margin-left: 0;
+	margin-right: 0;
+	padding-left: 0;
+	padding-right: 0;
+}
 
-	nav ul li {
-		display: inline;
-		text-transform: lowercase;
-		list-style-type: none;
-		margin-right: 0.75em;
-		font-size: 95%;
-		font-family: monospace;
-	}
+nav ul li {
+	display: inline;
+	text-transform: lowercase;
+	list-style-type: none;
+	margin-right: 0.75em;
+	font-size: 95%;
+	font-family: monospace;
+}
 
-	nav ul li::last {
-		margin-right: 0;
-	}
+nav ul li::last {
+	margin-right: 0;
+}
 
-	nav ul li span {
-		display: inline-block;
-	}
+nav ul li span {
+	display: inline-block;
+}
 
-	img.float-left {
-		float: left;
-		max-width: 25%;
-		margin-right: 1em;
-		margin-bottom: 1em;
-	}
+img.float-left {
+	float: left;
+	max-width: 25%;
+	margin-right: 1em;
+	margin-bottom: 1em;
+}
 
-	p::after {
-		clear: both;
-	}
+p::after {
+	clear: both;
+}
 
-	#content {
-		line-height: 1.5em;
-	}
+#content {
+	line-height: 1.5em;
+}
 
-	h1, h2, h3, h4, h5, h6 {
-		font-variant: small-caps;
-		font-family: sans-serif;
-		text-align: center;
-	}
+h1, h2, h3, h4, h5, h6 {
+	font-variant: small-caps;
+	font-family: sans-serif;
+	text-align: center;
+}
 
-	a {
-		text-decoration: none;
-		border-bottom: 1px dotted;
-	}
+a {
+	text-decoration: none;
+	border-bottom: 1px dotted;
+}
 
-	header .whoami {
-		border-bottom: none;
-	}
+header .whoami {
+	border-bottom: none;
+}
 
-	header .whoami h1 {
-		border-bottom: none;
-		font-variant: normal;
-		margin: 0.25em 0;
-	}
+header .whoami h1 {
+	border-bottom: none;
+	font-variant: normal;
+	margin: 0.25em 0;
+}
 
+blockquote .tangential,
+blockquote .disclaimer,
+blockquote p {
+	display: block;
+	border: 1px dotted;
+	padding: 0.5em;
+	text-align: center;
+	font-size: 85%;
+	break-inside: avoid;
+}
+
+@media only screen and (max-width: 700px) {
 	blockquote .tangential,
 	blockquote .disclaimer,
 	blockquote p {
-		display: block;
-		border: 1px dotted;
-		padding: 0.5em;
-		text-align: center;
-		font-size: 85%;
-		break-inside: avoid;
+		margin: 0;
 	}
 
-	@media only screen and (max-width: 700px) {
-		blockquote .tangential,
-		blockquote .disclaimer,
-		blockquote p {
-			margin: 0;
-		}
-
-		blockquote {
-			margin: 0;
-		}
+	blockquote {
+		margin: 0;
 	}
+}
 
-	#content p img {
-		max-width: 100%;
-		width: 100%;
-	}
+#content p img {
+	max-width: 100%;
+	width: 100%;
+}
 
-	.force-caps {
-		text-transform: uppercase;
-	}
+.force-caps {
+	text-transform: uppercase;
+}
 
-	.grayscale {
-		filter: grayscale(100%);
-	}
+.grayscale {
+	filter: grayscale(100%);
+}
 
-	.comma-separated-list li {
-		display: inline;
-	}
+.comma-separated-list li {
+	display: inline;
+}
 
-	.comma-separated-list li:after {
-		content: ",";
-	}
+.comma-separated-list li:after {
+	content: ",";
+}
 
-	.comma-separated-list li:last-child:after {
-		content: "";
-	}
+.comma-separated-list li:last-child:after {
+	content: "";
+}
 
-	.resume .job,
-	.projects-project {
-		break-inside: avoid;
-	}
+.resume .job,
+.projects-project {
+	break-inside: avoid;
+}
 
-	.flexy {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: space-between;
-	}
+.flexy {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
 
-	.flexy .flex {
-		flex: 1;
-	}
+.flexy .flex {
+	flex: 1;
+}
 
-	.flexy .break {
-		flex-basis: 100%;
-		height: 0;
-	}
+.flexy .break {
+	flex-basis: 100%;
+	height: 0;
+}
 
-	.flexy .push-left-10 {
-		flex-basis: 10%;
-		flex-grow: 0;
-	}
+.flexy .push-left-10 {
+	flex-basis: 10%;
+	flex-grow: 0;
+}
 
-	.flexy .push-left-20 {
-		flex-basis: 20%;
-		flex-grow: 0;
-	}
+.flexy .push-left-20 {
+	flex-basis: 20%;
+	flex-grow: 0;
+}
 
-	.flexy .push-left-30 {
-		flex-basis: 30%;
-		flex-grow: 0;
-	}
+.flexy .push-left-30 {
+	flex-basis: 30%;
+	flex-grow: 0;
+}
 
-	.flexy .push-left-50 {
-		flex-basis: 50%;
-		flex-grow: 1;
-		flex-shrink: 1;
-	}
+.flexy .push-left-50 {
+	flex-basis: 50%;
+	flex-grow: 1;
+	flex-shrink: 1;
+}
 
-	.flexy h3, .flexy h4 {
-		display: inline-block;
-		align-self: center;
-		text-align: left;
-	}
+.flexy h3, .flexy h4 {
+	display: inline-block;
+	align-self: center;
+	text-align: left;
+}
 
-	.resume .skillset h3,
-	.resume .job .title,
-	.resume .testimonial h4,
-	.resume .foss-where,
-	.projects-project .title {
-		margin-bottom: 0;
-		text-align: left;
-	}
+.resume .skillset h3,
+.resume .job .title,
+.resume .testimonial h4,
+.resume .foss-where,
+.projects-project .title {
+	margin-bottom: 0;
+	text-align: left;
+}
 
-	.resume .job .tenure,
-	.projects-project .tenure,
-	.resume .testimonial .author p {
-		font-size: 85%;
-		padding: 0.5em 0;
-		text-align: left;
-	}
+.resume .job .tenure,
+.projects-project .tenure,
+.resume .testimonial .author p {
+	font-size: 85%;
+	padding: 0.5em 0;
+	text-align: left;
+}
 
-	.resume .job .tenure span,
-	.projects-project .tenure span {
-		display: inline-block;
-	}
+.resume .job .tenure span,
+.projects-project .tenure span {
+	display: inline-block;
+}
 
-	.flex.description, .flex.consequence {
-		align-self: center;
-	}
+.flex.description, .flex.consequence {
+	align-self: center;
+}
 
-	.flex.consequence {
-		margin-left: 1em;
-		margin-right: 0;
-		//text-align: justify;
-	}
+.flex.consequence {
+	margin-left: 1em;
+	margin-right: 0;
+	//text-align: justify;
+}
 
-	details.heading summary {
-		text-align: center;
-	}
+details.heading summary {
+	text-align: center;
+}
 
-	details.heading summary h3 {
-		display: inline-block;
-	}
+details.heading summary h3 {
+	display: inline-block;
+}
 
-	.resume .accolades p {
-		text-align: justify;
-	}
+.resume .accolades p {
+	text-align: justify;
+}
 
-	.resume .testimonial .flex.description {
-		margin-top: 0;
-	}
+.resume .testimonial .flex.description {
+	margin-top: 0;
+}
 
-	details {
-		border: 1px dashed;
-		padding: 0.75em 0.25em;
-		margin-bottom: 0.75em;
-	}
+details {
+	border: 1px dashed;
+	padding: 0.75em 0.25em;
+	margin-bottom: 0.75em;
+}
 
-	.consequence {
-		text-align: center;
-		flex-shrink: 0;
-		flex-basis: 33%;
-		padding: 0.25em 0.5em;
-		box-sizing: border-box;
-		margin: 0.2em;
-	}
+.consequence {
+	text-align: center;
+	flex-shrink: 0;
+	flex-basis: 33%;
+	padding: 0.25em 0.5em;
+	box-sizing: border-box;
+	margin: 0.2em;
+}
 
-	.penalties {
-		background-color: lightblue;
-		color: black;
-	}
+.penalties {
+	background-color: lightblue;
+	color: black;
+}
 
-	.mild-interventions {
-		background-color: lightgreen;
-		color: black;
-	}
+.mild-interventions {
+	background-color: lightgreen;
+	color: black;
+}
 
-	.yellow-card {
-		background-color: yellow;
-		color: black;
-	}
+.yellow-card {
+	background-color: yellow;
+	color: black;
+}
 
-	.red-card {
-		background-color: red;
-		color: black;
-	}
+.red-card {
+	background-color: red;
+	color: black;
+}
 
-	.big-interventions {
-		background-color: black;
-		border: 1px dashed red;
-		color: lightgray;
-	}
+.big-interventions {
+	background-color: black;
+	border: 1px dashed red;
+	color: lightgray;
+}
 
-	.per-subrule-interventions {
-		background-color: lightgray;
-		color: black;
-	}
+.per-subrule-interventions {
+	background-color: lightgray;
+	color: black;
+}
 
-	.qa-unreviewed {
-		background-color: lightgray;
-		border: 1px dashed red;
-		color: black;
-	}
+.qa-unreviewed {
+	background-color: lightgray;
+	border: 1px dashed red;
+	color: black;
+}
 
-	.centered {
-		text-align: center;
-	}
+.centered {
+	text-align: center;
+}
 
-	/* This rule combos with the ~ rule below to remove the 5em margin when starting
-	the first rules section (safety) without resorting to markup hacks to do so.
-	https://stackoverflow.com/a/5293095
-	 */
-	.rule.begins-new-section {
-		margin-top: 0;
-	}
+/* This rule combos with the ~ rule below to remove the 5em margin when starting
+the first rules section (safety) without resorting to markup hacks to do so.
+https://stackoverflow.com/a/5293095
+	*/
+.rule.begins-new-section {
+	margin-top: 0;
+}
 
-	.rule.begins-new-section ~ .rule.begins-new-section {
-		margin-top: 5em;
-	}
+.rule.begins-new-section ~ .rule.begins-new-section {
+	margin-top: 5em;
+}
 
-	.rule ol {
-		list-style-type: lower-alpha;
-	}
+.rule ol {
+	list-style-type: lower-alpha;
+}
 
-	.rule ol > li > ol {
-		list-style-type: lower-roman;
-	}
+.rule ol > li > ol {
+	list-style-type: lower-roman;
+}
 
-	.subrule {
-		margin-top: 0.5em;
-	}
+.subrule {
+	margin-top: 0.5em;
+}
 
-	.subrule p {
-		display: inline;
-		padding: 0;
-	}
+.subrule p {
+	display: inline;
+	padding: 0;
+}
 
-	.subrule-description {
-		flex-grow: 3 !important;
-	}
+.subrule-description {
+	flex-grow: 3 !important;
+}
 
-	.jump-to {
-		scroll-margin-top: 3em;
-		visibility: hidden;
-	}
+.jump-to {
+	scroll-margin-top: 3em;
+	visibility: hidden;
+}
 
-	/* Work around firefox bug where <details> triangles disappear when block level
-	elements are present in the summary (I think), by simply removing them. */
-	details summary {
-		list-style-type: none;
-	}
+/* Work around firefox bug where <details> triangles disappear when block level
+elements are present in the summary (I think), by simply removing them. */
+details summary {
+	list-style-type: none;
+}
 
-	summary::-webkit-details-marker {
-		display: none;
-	}
+summary::-webkit-details-marker {
+	display: none;
+}
 
-	details.rule > h1 {
-		display: none;
-	}
+details.rule > h1 {
+	display: none;
+}
 
-	details[open] summary .description {
-		font-weight: bold;
-		font-size: 150%;
-	}
+details[open] summary .description {
+	font-weight: bold;
+	font-size: 150%;
+}
 
-	.backlinks {
-		text-align: center;
-	}
+.backlinks {
+	text-align: center;
+}
 
-	.backlinks h4 {
-		margin-bottom: 0;
-	}
+.backlinks h4 {
+	margin-bottom: 0;
+}
 
-	.backlinks .backlink {
-		font-size: 125%;
-		padding: 0 1em;
-	}
-	/* End workaround */
+.backlinks .backlink {
+	font-size: 125%;
+	padding: 0 1em;
+}
+/* End workaround */
 
