@@ -136,7 +136,7 @@ impl Ruleset {
                         "All information within was pulled "
                         a href=(self.meta.source_material.href) { "from FIRST" }
                         (format!(
-                            " on {} (UTC), which includes as recent as Team Update {}.",
+                            " on {} (UTC), which includes Team Update {} and all prior.",
                             self.meta.source_material.accessed.date_naive(),
                             self.meta.source_material.latest_team_update_included,
                         ))
@@ -145,11 +145,15 @@ impl Ruleset {
 
                 blockquote {
                     p class="disclaimer" {
-                        "This is not an official or FIRST-endorsed resource. It's simply a side project written by Josh from Washington. Do not use it as your sole resource at an event: "
-                        em { "always" }
-                        " retain and refer to a copy of the Game Manual PDF and to the latest PDFs of the Q&A. If you have questions, concerns, or feedback, email me at josh [at] klar [dot] sh, or feel free to "
-                        a href="//github.com/klardotsh/what-the-ref" { "contribute" }
-                        ", it's open source!"
+                        "Made with ♡ by "
+                        a href="//klar.sh" { "Josh Klar (email: josh [at] klar [dot] sh)" }
+                        " in Washington State. This "
+                        a href="//codeberg.org/FriendsWithRobots/what-the-ref" {
+                            "open-source project you can contribute to"
+                        }
+                        " is not affiliated with FIRST HQ, and is not an official game resource. "
+                        em { "Always" }
+                        " retain and refer to a copy of the Game Manual PDF the latest Q&A PDF as your final sources of truth, and use this only as a helpful index and reference."
                     }
                 }
             }
