@@ -21,7 +21,14 @@ pub enum Consequence {
 impl Consequence {
     pub fn css_class(self: &Self) -> String {
         match self {
-            Self::Penalty(_) => "penalties",
+            Self::Penalty(Penalty {
+                kind: PenaltyKind::Minor,
+                ..
+            }) => "minor-penalties",
+            Self::Penalty(Penalty {
+                kind: PenaltyKind::Major,
+                ..
+            }) => "major-penalties",
             Self::Warning => "mild-interventions",
             Self::WarningEscCard(Card::Yellow) => "verbal-esc-yellow-card",
             Self::WarningEscCard(Card::Red) => "verbal-esc-red-card",
@@ -46,7 +53,8 @@ impl Consequence {
             Self::WarningEscCard(c) => match c {
                 Card::Yellow => "W→YC",
                 Card::Red => "W→RC",
-            }.into(),
+            }
+            .into(),
             Self::Card(c) => match c {
                 Card::Yellow => "YC",
                 Card::Red => "RC",
@@ -80,11 +88,11 @@ impl FromStr for Consequence {
         }
 
         if s == "W>YC" {
-            return Ok(Self::WarningEscCard(Card::Yellow))
+            return Ok(Self::WarningEscCard(Card::Yellow));
         }
 
         if s == "W>RC" {
-            return Ok(Self::WarningEscCard(Card::Red))
+            return Ok(Self::WarningEscCard(Card::Red));
         }
 
         if s == "D" {
@@ -165,12 +173,16 @@ impl std::fmt::Display for Penalty {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{}{}x{}{}{}",
+            "{}{}{}{}{}",
             if self.when_repeated { "r=" } else { "" },
-            self.count,
+            if self.count.get() > 1 {
+                format!("{}x ", self.count)
+            } else {
+                "".into()
+            },
             match self.kind {
-                PenaltyKind::Minor => "mi",
-                PenaltyKind::Major => "Ma",
+                PenaltyKind::Minor => "min",
+                PenaltyKind::Major => "MAJ",
             },
             if self.at_hr_discretion { "*" } else { "" },
             if self.repeat_5s { "/5s" } else { "" },
@@ -191,7 +203,11 @@ impl FromStr for Penalty {
         }
 
         let when_repeated = s.starts_with("r=");
-        let s = if when_repeated { s.get(2..).unwrap_or("") } else { s };
+        let s = if when_repeated {
+            s.get(2..).unwrap_or("")
+        } else {
+            s
+        };
 
         let count = s
             .get(0..1)

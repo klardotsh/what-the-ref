@@ -1,4 +1,6 @@
 :root {
+	--minor-penalty-color: cadetblue;
+	--major-penalty-color: orange;
 	--yellow-card-color: yellow;
 	--red-card-color: palevioletred;
 }
@@ -326,8 +328,13 @@ details {
 	margin: 0.2em;
 }
 
-.penalties {
-	background-color: lightblue;
+.minor-penalties {
+	background-color: var(--minor-penalty-color);
+	color: black;
+}
+
+.major-penalties {
+	background-color: var(--major-penalty-color);
 	color: black;
 }
 
