@@ -167,13 +167,14 @@ pub struct Penalty {
     pub repeat_5s: bool,
     pub at_hr_discretion: bool,
     pub when_repeated: bool,
+    pub per_scoring_element: bool,
 }
 
 impl std::fmt::Display for Penalty {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{}{}{}{}{}",
+            "{}{}{}{}{}{}",
             if self.when_repeated { "r=" } else { "" },
             if self.count.get() > 1 {
                 format!("{}x ", self.count)
@@ -186,6 +187,7 @@ impl std::fmt::Display for Penalty {
             },
             if self.at_hr_discretion { "*" } else { "" },
             if self.repeat_5s { "/5s" } else { "" },
+            if self.per_scoring_element { "/ele" } else { "" },
         )
     }
 }
@@ -209,10 +211,17 @@ impl FromStr for Penalty {
             s
         };
 
-        let count = s
-            .get(0..1)
-            .ok_or(())
-            .map(|c| NonZeroU8::from_str(c).map_err(|_| ()))??;
+        let (per_scoring_element, count) = if s.get(0..1).unwrap_or("") == "N" {
+            (true, NonZeroU8::new(1).unwrap())
+        } else {
+            (
+                false,
+                s.get(0..1)
+                    .ok_or(())
+                    .map(|c| NonZeroU8::from_str(c).map_err(|_| ()))??,
+            )
+        };
+
         let kind = s
             .get(1..4)
             .map(PenaltyKind::from_str_opt)
@@ -223,6 +232,7 @@ impl FromStr for Penalty {
             kind,
             count,
             when_repeated,
+            per_scoring_element,
             repeat_5s: false,
             at_hr_discretion: false,
         };
@@ -318,6 +328,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: false,
             at_hr_discretion: false,
             when_repeated: false,
+            per_scoring_element: false,
         })),
         "1xMi".parse::<Consequence>()
     );
@@ -328,6 +339,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: false,
             at_hr_discretion: false,
             when_repeated: false,
+            per_scoring_element: false,
         })),
         "1xMa".parse::<Consequence>()
     );
@@ -338,6 +350,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: false,
             at_hr_discretion: true,
             when_repeated: false,
+            per_scoring_element: false,
         })),
         "1xMa*".parse::<Consequence>()
     );
@@ -348,6 +361,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: true,
             at_hr_discretion: false,
             when_repeated: false,
+            per_scoring_element: false,
         })),
         "1xMi+".parse::<Consequence>()
     );
@@ -358,6 +372,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: false,
             at_hr_discretion: false,
             when_repeated: true,
+            per_scoring_element: false,
         })),
         "r=1xMa".parse::<Consequence>()
     );
@@ -369,6 +384,7 @@ pub fn test_parse_consequence_like_matrix() {
             repeat_5s: true,
             at_hr_discretion: true,
             when_repeated: false,
+            per_scoring_element: false,
         })),
         "3xMa+*".parse::<Consequence>()
     );
