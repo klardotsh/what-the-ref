@@ -17,6 +17,7 @@ pub enum Consequence {
     RobotRemoval,
     Reinspect,
     NoScore,
+    Freebie,
 }
 
 impl Consequence {
@@ -43,7 +44,8 @@ impl Consequence {
             | Self::OptionalDisable
             | Self::RobotRemoval
             | Self::Reinspect
-            | Self::NoScore => "big-interventions",
+            | Self::NoScore
+            | Self::Freebie => "big-interventions",
         }
         .into()
     }
@@ -74,6 +76,7 @@ impl Consequence {
             Self::RobotRemoval => "REMOVAL".into(),
             Self::Reinspect => "REINSPECT".into(),
             Self::NoScore => "NO SCORE".into(),
+            Self::Freebie => "FREE CLIMB".into(),
         }
     }
 }
@@ -124,6 +127,10 @@ impl FromStr for Consequence {
 
         if s == "NS" {
             return Ok(Self::NoScore);
+        }
+
+        if s == "FREEBIE" {
+            return Ok(Self::Freebie);
         }
 
         if let Some(card_type) = s.get(0..2).and_then(Card::from_str_opt) {
