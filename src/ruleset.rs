@@ -202,6 +202,12 @@ impl Ruleset {
                 "Consequence hints ending in a * indicate optional / head ref discretion."
             }
 
+            blockquote {
+                p class="disclaimer" {
+                    "Please note that G4xx (In-Match) rules are displayed at the top of the list on the premise that they are most relevant while refereeing a match. G1xx (Safety), G2xx (Conduct), G3xx (Pre-Match), and G5xx (Post-Match) rules are all here too, just keep scrolling!"
+                }
+            }
+
             @for (_, rule) in &self.rules {
                 (render_rule(rule))
             }
