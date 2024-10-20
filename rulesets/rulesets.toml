@@ -28,27 +28,27 @@ directory = "g3xx-prematch"
 
 [[rulesets.sources]]
 display_name = "Game Rules: In-Match: Auto (11.4.1)"
-directory = "g41x-auto"
+directory = "g4xx-auto"
 
 [[rulesets.sources]]
 display_name = "Game Rules: In-Match: Teleop (11.4.2)"
-directory = "g42x-teleop"
+directory = "g4xx-teleop"
 
 [[rulesets.sources]]
 display_name = "Game Rules: In-Match: Scoring Element (11.4.3)"
-directory = "g43x-scoring-element"
+directory = "g4xx-scoring-element"
 
 [[rulesets.sources]]
 display_name = "Game Rules: In-Match: Robot (11.4.4)"
-directory = "g44x-match-robot"
+directory = "g4xx-match-robot"
 
 [[rulesets.sources]]
 display_name = "Game Rules: In-Match: Opponent Interaction (11.4.5)"
-directory = "g45x-opponent-interaction"
+directory = "g4xx-opponent-interaction"
 
 [[rulesets.sources]]
 display_name = "Game Rules: In-Match: Human (11.4.6)"
-directory = "g46x-match-human"
+directory = "g4xx-match-human"
 
 [[rulesets.sources]]
 display_name = "Game Rules: Post-Match (11.5)"
