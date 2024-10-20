@@ -100,7 +100,7 @@ body {
 	}
 }
 
-header {
+header, #rules {
 	padding-bottom: 0.5em;
 	border-bottom: 0.15em dotted lightgrey;
 }
