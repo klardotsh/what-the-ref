@@ -411,7 +411,7 @@ https://stackoverflow.com/a/5293095
 }
 
 .rule .description {
-	font-style: italic;
+	font-variant: small-caps;
 }
 
 .rule .description .evergreen-status {
@@ -420,7 +420,6 @@ https://stackoverflow.com/a/5293095
 
 .rule .description strong {
 	font-size: 120%;
-	font-style: normal;
 }
 
 .rule hr {
