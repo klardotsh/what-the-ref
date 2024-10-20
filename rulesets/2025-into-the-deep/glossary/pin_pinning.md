@@ -1,3 +1,7 @@
+---
+alias_stems = ["pin", "pinning"]
+---
+
 # Pin / Pinning
 
 Preventing an opposing [ALLIANCE ROBOT](!!) from moving, accessing, or exiting

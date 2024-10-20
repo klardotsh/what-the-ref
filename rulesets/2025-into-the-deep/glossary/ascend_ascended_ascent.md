@@ -1,3 +1,7 @@
+---
+alias_stems = ["ascend", "ascended", "ascent"]
+---
+
 # Ascend / Ascended / Ascent
 
 A [ROBOT](!!) is considered ASCENDING once it is attempting to achieve an

@@ -1,3 +1,7 @@
+---
+alias_stems = ["ranking points"]
+---
+
 # Ranking Points (RP)
 
 [ALLIANCES](!!) are rewarded RANKING POINTS (RP) for winning or tying
