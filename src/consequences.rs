@@ -15,6 +15,7 @@ pub enum Consequence {
     Disqualification,
     OptionalDisqualification,
     RobotRemoval,
+    Reinspect,
     NoScore,
 }
 
@@ -41,6 +42,7 @@ impl Consequence {
             | Self::Disable
             | Self::OptionalDisable
             | Self::RobotRemoval
+            | Self::Reinspect
             | Self::NoScore => "big-interventions",
         }
         .into()
@@ -70,6 +72,7 @@ impl Consequence {
             Self::Disqualification => "DQ".into(),
             Self::OptionalDisqualification => "DQ*".into(),
             Self::RobotRemoval => "REMOVAL".into(),
+            Self::Reinspect => "REINSPECT".into(),
             Self::NoScore => "NO SCORE".into(),
         }
     }
@@ -113,6 +116,10 @@ impl FromStr for Consequence {
 
         if s == "RR" {
             return Ok(Self::RobotRemoval);
+        }
+
+        if s == "REI" {
+            return Ok(Self::Reinspect);
         }
 
         if s == "NS" {
