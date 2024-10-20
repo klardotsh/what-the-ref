@@ -44,8 +44,8 @@ impl Consequence {
             Self::Penalty(p) => p.to_string(),
             Self::Warning => "WARN".into(),
             Self::WarningEscCard(c) => match c {
-                Card::Yellow => "W>YC",
-                Card::Red => "W>RD",
+                Card::Yellow => "W→YC",
+                Card::Red => "W→RC",
             }.into(),
             Self::Card(c) => match c {
                 Card::Yellow => "YC",
@@ -158,13 +158,15 @@ pub struct Penalty {
     pub count: NonZeroU8,
     pub repeat_5s: bool,
     pub at_hr_discretion: bool,
+    pub when_repeated: bool,
 }
 
 impl std::fmt::Display for Penalty {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "{}x{}{}{}",
+            "{}{}x{}{}{}",
+            if self.when_repeated { "r=" } else { "" },
             self.count,
             match self.kind {
                 PenaltyKind::Minor => "mi",
@@ -188,6 +190,9 @@ impl FromStr for Penalty {
             return Err(());
         }
 
+        let when_repeated = s.starts_with("r=");
+        let s = if when_repeated { s.get(2..).unwrap_or("") } else { s };
+
         let count = s
             .get(0..1)
             .ok_or(())
@@ -201,6 +206,7 @@ impl FromStr for Penalty {
         let mut ret = Self {
             kind,
             count,
+            when_repeated,
             repeat_5s: false,
             at_hr_discretion: false,
         };
@@ -295,6 +301,7 @@ pub fn test_parse_consequence_like_matrix() {
             count: 1.try_into().unwrap(),
             repeat_5s: false,
             at_hr_discretion: false,
+            when_repeated: false,
         })),
         "1xMi".parse::<Consequence>()
     );
@@ -304,6 +311,7 @@ pub fn test_parse_consequence_like_matrix() {
             count: 1.try_into().unwrap(),
             repeat_5s: false,
             at_hr_discretion: false,
+            when_repeated: false,
         })),
         "1xMa".parse::<Consequence>()
     );
@@ -313,6 +321,7 @@ pub fn test_parse_consequence_like_matrix() {
             count: 1.try_into().unwrap(),
             repeat_5s: false,
             at_hr_discretion: true,
+            when_repeated: false,
         })),
         "1xMa*".parse::<Consequence>()
     );
@@ -322,8 +331,19 @@ pub fn test_parse_consequence_like_matrix() {
             count: 1.try_into().unwrap(),
             repeat_5s: true,
             at_hr_discretion: false,
+            when_repeated: false,
         })),
         "1xMi+".parse::<Consequence>()
+    );
+    assert_eq!(
+        Ok(Consequence::Penalty(Penalty {
+            kind: PenaltyKind::Major,
+            count: 1.try_into().unwrap(),
+            repeat_5s: false,
+            at_hr_discretion: false,
+            when_repeated: true,
+        })),
+        "r=1xMa".parse::<Consequence>()
     );
     // This would be just about the most ruthless rule in FTC history...
     assert_eq!(
@@ -332,6 +352,7 @@ pub fn test_parse_consequence_like_matrix() {
             count: 3.try_into().unwrap(),
             repeat_5s: true,
             at_hr_discretion: true,
+            when_repeated: false,
         })),
         "3xMa+*".parse::<Consequence>()
     );
