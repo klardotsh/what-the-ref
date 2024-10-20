@@ -31,6 +31,27 @@ contribute the patches yourself on
 [SourceHut](https://git.sr.ht/~klardotsh/what-the-ref), or by emailing me
 whatever needs changed.
 
+## Helpful Notes For Contributing
+
+Rules, which are stored on disk as Markdown files, use a special link
+destination to indicate interlinks (things which should link within What The
+Ref to other things in the manual, and not to an external site), `!!`. For
+example, `[ROBOT](!!)` would link to the glossary term for `ROBOT`, and
+`[G404](!!)` would link to rule G404 in the in-match rules.
+
+When converting FIRST rules from the manual into Markdown format, setting up
+all these interlinks can be an exhausting process, so I recommend some clever
+find-and-replace to help scriptify it. For example, in Vim, assuming I have a
+visual mode selection of the lines of real rule text (eg. not the header or the
+frontmatter), something like the following would automatically interlink any
+matching strings, saving me tons of typing:
+
+```
+:'<,'>s/\(DRIVE TEAM\)/\[\1\]\(!!\)/gI
+```
+
+Hard-wrap your Markdown at 80 characters, please!
+
 ## Legal Blah-Blah-Blah
 
 All rules content, images, media, and the branding of the games themselves,
