@@ -1,3 +1,8 @@
+:root {
+	--yellow-card-color: yellow;
+	--red-card-color: palevioletred;
+}
+
 @media print {
 	.noprint, .noprint * {
 		display: none !important;
@@ -344,12 +349,12 @@ details {
 }
 
 .yellow-card {
-	background-color: yellow;
+	background-color: var(--yellow-card-color);
 	color: black;
 }
 
 .red-card {
-	background-color: red;
+	background-color: var(--red-card-color);
 	color: black;
 }
 
@@ -357,6 +362,18 @@ details {
 	background-color: black;
 	border: 1px dashed red;
 	color: lightgray;
+}
+
+.verbal-esc-yellow-card {
+	border: 1px dashed black;
+	background-image: linear-gradient(to right, white 33%, var(--yellow-card-color));
+	color: black;
+}
+
+.verbal-esc-red-card {
+	border: 1px dashed black;
+	background-image: linear-gradient(to right, white 20%, var(--red-card-color));
+	color: black;
 }
 
 .per-subrule-interventions {
@@ -386,12 +403,29 @@ https://stackoverflow.com/a/5293095
 	margin-top: 5em;
 }
 
+.rule {
+	padding: 0.66em;
+}
+
 .rule ol {
 	list-style-type: lower-alpha;
 }
 
 .rule ol > li > ol {
 	list-style-type: lower-roman;
+}
+
+.rule .description {
+	font-style: italic;
+}
+
+.rule .description strong {
+	font-size: 120%;
+	font-style: normal;
+}
+
+.rule hr {
+	width: 75%;
 }
 
 .subrule {

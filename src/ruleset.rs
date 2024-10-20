@@ -219,7 +219,7 @@ fn render_rule(rule: &Rule) -> Markup {
 fn render_rule_header(rule: &Rule) -> Markup {
     html! {
         span class="flex push-left-50 description" {
-            (format!("{}: {}", rule.number, rule.title))
+            (PreEscaped(format!("<strong>{}</strong>: {}", rule.number, rule.title)))
         }
 
         div class="flex flexy" {
@@ -256,6 +256,7 @@ fn render_rule_detail_prelude(rule: &Rule) -> Markup {
             @match summary {
                 Summary::EntireRule(rb) => div class="centered" {
                     (maud::PreEscaped(&rb.description))
+                    hr;
                 },
                 Summary::PerSubRule(rbs) => @for (subrule, rb) in rbs {
                     div class="subrule flexy" {
