@@ -9,9 +9,7 @@ use crate::text_normalization::anchorize;
 #[derive(Clone, Eq, Debug, Deserialize, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(try_from = "String")]
 pub enum RuleNumber {
-    Safety(NonZeroU8),
-    General(NonZeroU8),
-    GameSpecific(NonZeroU8),
+    Game(NonZeroU8),
     QA(NonZeroU8),
 }
 
@@ -26,8 +24,8 @@ impl RuleNumber {
     /// a new section has begun.
     pub fn begins_new_section(&self) -> bool {
         match self {
-            Self::Safety(num) | Self::General(num) | Self::GameSpecific(num) | Self::QA(num) => unsafe {
-                *num == NonZeroU8::new_unchecked(1)
+            Self::Game(num) | Self::QA(num) => {
+                (num.get() - 1) % 100 == 0
             },
         }
     }
@@ -36,9 +34,7 @@ impl RuleNumber {
 impl std::fmt::Display for RuleNumber {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Safety(num) => write!(f, "S{:0>2}", num),
-            Self::General(num) => write!(f, "G{:0>2}", num),
-            Self::GameSpecific(num) => write!(f, "GS{:0>2}", num),
+            Self::Game(num) => write!(f, "G{:0>2}", num),
             Self::QA(num) => write!(f, "Q{:0>3}", num),
         }
     }
@@ -50,24 +46,10 @@ impl FromStr for RuleNumber {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let s = s.to_lowercase();
 
-        if s.starts_with("gs") {
-            return s.get(2..).map_or_else(
-                || Err(Self::Err::MissingNumber),
-                |num| num.parse().map(Self::GameSpecific).map_err(|e| e.into()),
-            );
-        }
-
         if s.starts_with("g") {
             return s.get(1..).map_or_else(
                 || Err(Self::Err::MissingNumber),
-                |num| num.parse().map(Self::General).map_err(|e| e.into()),
-            );
-        }
-
-        if s.starts_with("s") {
-            return s.get(1..).map_or_else(
-                || Err(Self::Err::MissingNumber),
-                |num| num.parse().map(Self::Safety).map_err(|e| e.into()),
+                |num| num.parse().map(Self::Game).map_err(|e| e.into()),
             );
         }
 
@@ -116,17 +98,10 @@ impl From<ParseIntError> for RuleNumberParseError {
 #[test]
 fn test_rule_number_parsing() {
     assert_eq!(
-        Ok(RuleNumber::Safety(2.try_into().unwrap())),
-        "s02".parse::<RuleNumber>()
+        Ok(RuleNumber::Game(101.try_into().unwrap())),
+        "g101".parse::<RuleNumber>()
     );
-    assert_eq!(
-        Ok(RuleNumber::General(10.try_into().unwrap())),
-        "g10".parse::<RuleNumber>()
-    );
-    assert_eq!(
-        Ok(RuleNumber::GameSpecific(5.try_into().unwrap())),
-        "gs05".parse::<RuleNumber>()
-    );
+    assert!("g101".parse::<RuleNumber>().unwrap().begins_new_section());
     assert!("g".parse::<RuleNumber>().is_err());
     assert_eq!(
         Err(RuleNumberParseError::Unrecognizable),
