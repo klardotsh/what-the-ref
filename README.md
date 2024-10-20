@@ -2,10 +2,10 @@
 
 FIRST game manuals that bridge the gap between "color-coded cheat sheets" and
 the full blown manual, with better accessibility than the PDFs to boot.
-Maintained by [Josh Klar](//klar.sh), co-Senior Head Referee for FTC in
+Maintained by [Josh Klar](https://klar.sh), co-Senior Head Referee for FTC in
 Washington State, with input from plenty more folks.
 
-[See it online at WhatTheRef.info](//whattheref.info)
+[See it online at WhatTheRef.info](https://whattheref.info)
 
 ## Helpful Notes For Contributing
 
