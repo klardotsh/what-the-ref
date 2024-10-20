@@ -1,5 +1,5 @@
 use std::fmt::Display;
-use std::num::{NonZeroU8, ParseIntError};
+use std::num::{NonZeroU16, ParseIntError};
 use std::str::FromStr;
 
 use serde::Deserialize;
@@ -9,8 +9,8 @@ use crate::text_normalization::anchorize;
 #[derive(Clone, Eq, Debug, Deserialize, Hash, Ord, PartialEq, PartialOrd)]
 #[serde(try_from = "String")]
 pub enum RuleNumber {
-    Game(NonZeroU8),
-    QA(NonZeroU8),
+    Game(NonZeroU16),
+    QA(NonZeroU16),
 }
 
 impl RuleNumber {
@@ -34,7 +34,7 @@ impl RuleNumber {
 impl std::fmt::Display for RuleNumber {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Game(num) => write!(f, "G{:0>2}", num),
+            Self::Game(num) => write!(f, "G{:0>3}", num),
             Self::QA(num) => write!(f, "Q{:0>3}", num),
         }
     }
