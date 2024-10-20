@@ -121,8 +121,13 @@ impl Ruleset {
 
             header {
                 nav {
-                    h1 class="gamename" {
-                        (format!("Unofficial Augmented Manual for {}", self.meta.longname))
+                    h1 id="wtr-branding" {
+                        "What The Ref?!"
+                        br;
+                        "augmented FIRST game manuals for referees"
+                    }
+                    h2 class="gamename" {
+                        (self.meta.longname)
                     }
                     p {
                         (format!(
