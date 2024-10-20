@@ -232,6 +232,16 @@ blockquote p {
 	break-inside: avoid;
 }
 
+#global-expansion-state-buttons {
+	padding-top: 0.5em;
+	border-top: 0.15em dotted lightgrey;
+}
+
+#global-expansion-state-buttons button {
+	font-size: 125%;
+	margin: 0.5em;
+}
+
 .flexy {
 	display: flex;
 	flex-direction: row;
@@ -273,28 +283,6 @@ blockquote p {
 	display: inline-block;
 	align-self: center;
 	text-align: left;
-}
-
-.resume .skillset h3,
-.resume .job .title,
-.resume .testimonial h4,
-.resume .foss-where,
-.projects-project .title {
-	margin-bottom: 0;
-	text-align: left;
-}
-
-.resume .job .tenure,
-.projects-project .tenure,
-.resume .testimonial .author p {
-	font-size: 85%;
-	padding: 0.5em 0;
-	text-align: left;
-}
-
-.resume .job .tenure span,
-.projects-project .tenure span {
-	display: inline-block;
 }
 
 .flex.description, .flex.consequence {

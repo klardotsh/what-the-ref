@@ -156,6 +156,17 @@ impl Ruleset {
                         " retain and refer to a copy of the Game Manual PDF the latest Q&A PDF as your final sources of truth, and use this only as a helpful index and reference."
                     }
                 }
+
+                div id="global-expansion-state-buttons" class="flexy" {
+                    button onclick="openAllDetails()" class="flex flex-push-left-50" {
+                        "Expand Everything"
+                        br;
+                        "(eg. for browser search)"
+                    }
+                    button onclick="closeAllDetails()" class="flex flex-push-left-50" {
+                        "Collapse Everything"
+                    }
+                }
             }
 
             div id="content" {

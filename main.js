@@ -16,6 +16,14 @@ function openTarget() {
 window.addEventListener('hashchange', openTarget);
 document.addEventListener('DOMContentLoaded', openTarget);
 
+function setAllDetailsOpenState(open) {
+	Array.from(document.getElementsByTagName("details")).forEach((ele) => ele.open = open);
+}
+
 function closeAllDetails() {
-	Array.from(document.getElementsByTagName("details")).forEach((ele) => ele.open = false);
+	setAllDetailsOpenState(false);
+}
+
+function openAllDetails() {
+	setAllDetailsOpenState(true);
 }
