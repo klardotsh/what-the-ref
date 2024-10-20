@@ -407,6 +407,10 @@ https://stackoverflow.com/a/5293095
 	font-style: italic;
 }
 
+.rule .description .evergreen-status {
+	font-style: normal;
+}
+
 .rule .description strong {
 	font-size: 120%;
 	font-style: normal;

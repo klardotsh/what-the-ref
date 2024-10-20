@@ -15,6 +15,10 @@ use crate::summary::Summary;
 
 const ASSUMED_NUMBER_OF_RULES: usize = 50;
 
+// Change this annually to something reasonable. This is used to denote rules which are
+// season-specific (as opposed to evergreen).
+const SEASON_EMOJI: &str = "🪸";
+
 type RulesByNumber = IndexMap<RuleNumber, Rule>;
 
 #[derive(Debug, Deserialize)]
@@ -205,7 +209,15 @@ impl Ruleset {
         html! {
             div id="rules" {
                 h1 { "Rules" }
+
                 (click_tap_expand_msg())
+                p class="centered" {
+                    "Evergreen rules indicated by "
+                    (evergreen_span())
+                    ", season-specific rules indicated by "
+                    (non_evergreen_span())
+                    "."
+                }
                 p class="centered" {
                     "Consequence hints ending in a * indicate optional / head ref discretion."
                 }
@@ -249,7 +261,20 @@ fn render_rule(rule: &Rule) -> Markup {
 fn render_rule_header(rule: &Rule) -> Markup {
     html! {
         span class="flex push-left-50 description" {
-            (PreEscaped(format!("<strong>{}</strong>: {}", rule.number, rule.title)))
+            @match &rule.summary {
+                Some(Summary::EntireRule(rb)) => {
+                    @if rb.evergreen {
+                        (evergreen_span())
+                    } @else {
+                        (non_evergreen_span())
+                    }
+                }
+                _ => (non_evergreen_span())
+            }
+            " "
+
+            strong { (format!("{}: ", rule.number)) }
+            (rule.title)
         }
 
         div class="flex flexy" {
@@ -338,5 +363,17 @@ fn render_rule_backreferences(rule: &Rule) -> Markup {
 fn jumpable_anchor(id: &str) -> Markup {
     html! {
         a id=(id) class="jump-to" {}
+    }
+}
+
+fn evergreen_span() -> Markup {
+    html! {
+        span class="evergreen-status" { "🌲" }
+    }
+}
+
+fn non_evergreen_span() -> Markup {
+    html! {
+        span class="evergreen-status" { (SEASON_EMOJI) }
     }
 }
