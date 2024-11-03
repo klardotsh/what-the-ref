@@ -6,9 +6,9 @@ shortname = "Into The Deep"
 longname = "Into The Deep℠ presented by RTX"
 
 [rulesets.source_material]
-accessed = "2024-10-18 17:54:05-07:00"
+accessed = "2024-11-02 20:20:00-07:00"
 href = "https://ftc-resources.firstinspires.org/file/ftc/game/manual"
-latest_team_update_included = 3
+latest_team_update_included = 5
 # Technically I tend to pull text from the HTML version of the manual, eg.
 # https://ftc-resources.firstinspires.org/file/ftc/game/cm-html/Competition%20Manual%20-%20V4.1.htm.
 # This page is usually in varying degrees of brokenness and is not fit for
